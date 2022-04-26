@@ -12,7 +12,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.example.scapp_scouting.databinding.ActivityMapsBinding
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
-
+    //TEST
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
 
