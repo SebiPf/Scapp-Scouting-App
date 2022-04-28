@@ -59,6 +59,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         )
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12.0f))
 
+        mMap.uiSettings.isMapToolbarEnabled = false // Toolbar ("Open Maps and Route to - Symbols")
+
         //Log.i("Notiz", coordinates[0].latitude.toString());
     }
 }
