@@ -1,6 +1,5 @@
 package com.example.scapp_scouting
 
-import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
@@ -10,9 +9,9 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import java.io.IOException
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     //TEST
@@ -50,8 +49,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val coordinates = geocoder.getFromLocationName("Furtwangen", 1)  // add these two lines
 
         val location = LatLng(coordinates[0].latitude, coordinates[0].longitude)
-        mMap.addMarker(MarkerOptions().position(location).title(coordinates[0].featureName.toString() + ", " + coordinates[0].countryCode.toString()))
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(freiburg))
+
+        mMap.addMarker(
+            MarkerOptions()
+                .position(location)
+                .title(coordinates[0].postalCode.toString() + " " + coordinates[0].featureName.toString())
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_icon_bounded)) // alternatively: marker_icon
+                .snippet(coordinates[0].countryName.toString())
+        )
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12.0f))
 
         //Log.i("Notiz", coordinates[0].latitude.toString());
