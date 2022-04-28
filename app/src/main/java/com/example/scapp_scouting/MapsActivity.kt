@@ -44,10 +44,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+
+        // Map-Settings
+        mMap.uiSettings.isMapToolbarEnabled = false // Toolbar ("Open Maps and Route to - Symbols")
+        mMap.mapType = GoogleMap.MAP_TYPE_SATELLITE // Map-Style
+
         val geocoder = Geocoder(this)
 
-        val coordinates = geocoder.getFromLocationName("Furtwangen", 1)  // add these two lines
-
+        // Geocoding and Marker
+        val coordinates = geocoder.getFromLocationName("Furtwangen,I-Bau", 1)  // add these two lines
         val location = LatLng(coordinates[0].latitude, coordinates[0].longitude)
 
         mMap.addMarker(
@@ -57,9 +62,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_icon_bounded)) // alternatively: marker_icon
                 .snippet(coordinates[0].countryName.toString())
         )
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12.0f))
-
-        mMap.uiSettings.isMapToolbarEnabled = false // Toolbar ("Open Maps and Route to - Symbols")
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 14.0f))
 
         //Log.i("Notiz", coordinates[0].latitude.toString());
     }
