@@ -1,15 +1,18 @@
 package com.example.scapp_scouting
 
-import androidx.appcompat.app.AppCompatActivity
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
-
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import com.example.scapp_scouting.databinding.ActivityMapsBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.example.scapp_scouting.databinding.ActivityMapsBinding
+import java.io.IOException
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     //TEST
@@ -26,6 +29,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+
     }
 
     /**
@@ -37,13 +42,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        val geocoder = Geocoder(this)
 
-        // Add a marker in Sydney and move the camera
-        val freiburg = LatLng(47.9999, 7.842)
-        mMap.addMarker(MarkerOptions().position(freiburg).title("Marker in Freiburg"))
+        val coordinates = geocoder.getFromLocationName("Furtwangen", 1)  // add these two lines
+
+        val location = LatLng(coordinates[0].latitude, coordinates[0].longitude)
+        mMap.addMarker(MarkerOptions().position(location).title(coordinates[0].featureName.toString() + ", " + coordinates[0].countryCode.toString()))
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(freiburg))
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(freiburg, 12.0f))
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12.0f))
+
+        //Log.i("Notiz", coordinates[0].latitude.toString());
     }
 }
