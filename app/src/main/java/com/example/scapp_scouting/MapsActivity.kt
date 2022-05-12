@@ -2,7 +2,8 @@ package com.example.scapp_scouting
 
 import android.location.Geocoder
 import android.os.Bundle
-import android.util.Log
+import android.view.View
+import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.scapp_scouting.databinding.ActivityMapsBinding
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -14,9 +15,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
-    //TEST
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
+    private lateinit var searchView: SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +31,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
 
+        searchView = findViewById(R.id.searchBar)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                setNewLocation(query)
+                return false
+            }
+            override fun onQueryTextChange(newText: String): Boolean {
+                return false
+            }
+        })
     }
 
     /**
@@ -44,12 +55,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        val geocoder = Geocoder(this)
 
         // Map-Settings
         mMap.uiSettings.isMapToolbarEnabled = false // Toolbar ("Open Maps and Route to - Symbols")
         mMap.mapType = GoogleMap.MAP_TYPE_SATELLITE // Map-Style
 
-        val geocoder = Geocoder(this)
 
         // Geocoding and Marker
         val coordinates = geocoder.getFromLocationName("Furtwangen,I-Bau", 1)  // add these two lines
@@ -65,5 +76,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 14.0f))
 
         //Log.i("Notiz", coordinates[0].latitude.toString());
+    }
+
+   fun setNewLocation(newLocation: String){
+        val geocoder = Geocoder(this)
+        val coordinates = geocoder.getFromLocationName(newLocation, 1)  // add these two lines
+        val location = LatLng(coordinates[0].latitude, coordinates[0].longitude)
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 14.0f))
+    }
+
+    fun changeMapType(view: View){
+        if(mMap.mapType == GoogleMap.MAP_TYPE_SATELLITE){
+            mMap.mapType = GoogleMap.MAP_TYPE_NORMAL
+        }
+        else if(mMap.mapType == GoogleMap.MAP_TYPE_NORMAL)
+        {
+            mMap.mapType = GoogleMap.MAP_TYPE_TERRAIN
+        }
+        else{
+            mMap.mapType = GoogleMap.MAP_TYPE_SATELLITE
+        }
     }
 }
