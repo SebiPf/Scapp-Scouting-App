@@ -1,6 +1,8 @@
 package com.example.scapp_scouting
 
+import android.graphics.Color
 import android.location.Geocoder
+import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -12,9 +14,9 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import java.io.IOException
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
@@ -67,7 +69,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         // Geocoding and Marker
         val coordinates = geocoder.getFromLocationName("Furtwangen,I-Bau", 1)  // add these two lines
         val location = LatLng(coordinates[0].latitude, coordinates[0].longitude)
-
+        mMap.addCircle(
+            CircleOptions()
+                .center(location)
+                .radius(1000.0)
+                .strokeColor(Color.RED)
+                .fillColor(0x22ff0000)
+        )
         mMap.addMarker(
             MarkerOptions()
                 .position(location)
@@ -78,12 +86,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 14.0f))
     }
 
-   fun setNewLocation(newLocation: String){
+
+
+    fun setNewLocation(newLocation: String){
        val geocoder = Geocoder(this)
        try {
            val coordinates = geocoder.getFromLocationName(newLocation, 1)  // add these two lines
            val location = LatLng(coordinates[0].latitude, coordinates[0].longitude)
            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 14.0f))
+           mMap.clear()                             //Bestehende Kreise und Marker entfernen
+           mMap.addCircle(                          //Kreis im Standard-Radius einfügen
+               CircleOptions()
+                   .center(location)
+                   .radius(1000.0)
+                   .strokeColor(Color.RED)
+                   .fillColor(0x22ff0000)
+           )
+
+           //TODO: Alle möglichen Marker im Umkreis aus der Datenbank laden
+
        } catch (e: Exception) {
            Log.e("MapErrors", "Keine Koordinaten zur Zieleingabe gefunden. Fehlermeldung: " + e);
        }
