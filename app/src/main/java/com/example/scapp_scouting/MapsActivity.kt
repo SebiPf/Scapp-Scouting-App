@@ -2,6 +2,7 @@ package com.example.scapp_scouting
 
 import android.location.Geocoder
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import java.io.IOException
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
@@ -30,8 +32,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-
-        searchView = findViewById(R.id.searchBar)
+        //Aktion nach und während der Eingabe im Suchfeld
+        searchView = findViewById(R.id.navigationSearchView)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 setNewLocation(query)
@@ -74,15 +76,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 .snippet(coordinates[0].countryName.toString())
         )
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 14.0f))
-
-        //Log.i("Notiz", coordinates[0].latitude.toString());
     }
 
    fun setNewLocation(newLocation: String){
-        val geocoder = Geocoder(this)
-        val coordinates = geocoder.getFromLocationName(newLocation, 1)  // add these two lines
-        val location = LatLng(coordinates[0].latitude, coordinates[0].longitude)
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 14.0f))
+       val geocoder = Geocoder(this)
+       try {
+           val coordinates = geocoder.getFromLocationName(newLocation, 1)  // add these two lines
+           val location = LatLng(coordinates[0].latitude, coordinates[0].longitude)
+           mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 14.0f))
+       } catch (e: Exception) {
+           Log.e("MapErrors", "Keine Koordinaten zur Zieleingabe gefunden. Fehlermeldung: " + e);
+       }
+
     }
 
     fun changeMapType(view: View){
