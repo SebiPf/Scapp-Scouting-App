@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/ll"
@@ -14,32 +13,64 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
             <Button
-                android:id="@+id/btnIncrementByOne"
-                android:layout_width="match_parent"
+                android:id="@+id/btnMapType"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="changeMapType"
-                android:text="Kartentyp ändern"/>
+                android:text="Kartentyp ändern" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btnIncreaseRadius"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="increaseCircleRadius"
+                android:text="+200m" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/btnDecreaseRadius"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="decreaseCircleRadius"
+                android:text="-200m" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
         </LinearLayout>
 
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            <SearchView
-                android:id="@+id/navigationSearchView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="1dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginEnd="1dp"
-                android:queryHint="search"
-                android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
-        </LinearLayout>
+        <SearchView
+            android:id="@+id/navigationSearchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="1dp"
+            android:queryHint="search"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/map"
@@ -47,8 +78,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tool:context=".MapsActivity"
-            tool:layout="@layout/activity_maps"/>
+            tool:layout="@layout/activity_maps" />
 
     </LinearLayout>
+
 
 </RelativeLayout>
