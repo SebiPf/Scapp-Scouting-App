@@ -1,6 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.ScappScouting" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+
+    <!-- TODO: Farbgebung anpassen -->
+
+    <style name="Theme.ScappScouting" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/red</item>
         <item name="colorPrimaryVariant">@color/red_dark</item>
