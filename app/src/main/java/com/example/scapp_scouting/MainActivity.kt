@@ -15,6 +15,8 @@ class MainActivity : AppCompatActivity() {
     private val profileFragment = ProfileFragment()
     private lateinit var bottom_navigation: BottomNavigationView
 
+    // TODO: State Handling (durch show() und hide()?)
+
     override fun onCreate(savedInsanceState: Bundle?) {
         super.onCreate(savedInsanceState)
         setContentView(R.layout.activity_main)

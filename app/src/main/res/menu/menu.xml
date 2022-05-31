@@ -2,14 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
      android:id="@+id/maps"
-     android:icon="@drawable/ic_baseline_map"
+     android:icon="@drawable/ic_round_map"
      android:title="Karte"/>
     <item
         android:id="@+id/collection"
-        android:icon="@drawable/ic_baseline_list_alt"
+        android:icon="@drawable/ic_round_list_alt"
         android:title="Liste"/>
     <item
         android:id="@+id/profile"
-        android:icon="@drawable/ic_baseline_person"
+        android:icon="@drawable/ic_round_person"
         android:title="Profil"/>
 </menu>
