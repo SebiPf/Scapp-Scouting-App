@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="match_parent">
 
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.MapsFragment" />
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".fragments.MapsFragment" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -32,9 +32,9 @@
             android:id="@+id/btnChangeMapType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
             android:text="Kartentyp ändern"
-            android:textColor="#303030"
-            android:backgroundTint="@color/white"/>
+            android:textColor="#303030" />
 
         <Space
             android:layout_width="0dp"
@@ -45,9 +45,9 @@
             android:id="@+id/btnIncreaseRadius"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
             android:text="+200m"
-            android:textColor="#303030"
-            android:backgroundTint="@color/white"/>
+            android:textColor="#303030" />
 
         <Space
             android:layout_width="0dp"
@@ -58,9 +58,9 @@
             android:id="@+id/btnDecreaseRadius"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
             android:text="-200m"
-            android:textColor="#303030"
-            android:backgroundTint="@color/white"/>
+            android:textColor="#303030" />
 
         <Space
             android:layout_width="0dp"
@@ -89,6 +89,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
+        android:background="@drawable/bg_white_rounded"
         android:queryHint="search"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
@@ -96,7 +97,63 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:queryBackground="@drawable/bg_white_rounded"
-        app:submitBackground="@drawable/bg_white_rounded"
-        android:background="@drawable/bg_white_rounded"/>
+        app:submitBackground="@drawable/bg_white_rounded" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/markerInfoWindow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="-80dp"
+        app:layout_constraintBottom_toBottomOf="@+id/map"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="invisible">
+
+        <View
+            android:id="@+id/markerInfoView"
+            android:layout_width="257dp"
+            android:layout_height="84dp"
+            android:layout_marginBottom="88dp"
+            android:background="@drawable/bg_white_rounded"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/markerInfoImage"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/markerInfoView"
+            app:layout_constraintStart_toStartOf="@+id/markerInfoView"
+            app:layout_constraintTop_toTopOf="@+id/markerInfoView"
+            app:srcCompat="@drawable/location01" />
+
+        <TextView
+            android:id="@+id/markerInfoTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="Locationtitel"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/markerInfoView"
+            app:layout_constraintStart_toEndOf="@+id/markerInfoImage"
+            app:layout_constraintTop_toTopOf="@+id/markerInfoView"
+            app:layout_constraintVertical_bias="0.145" />
+
+        <TextView
+            android:id="@+id/markerInfoSnippet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="Stadt"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/markerInfoView"
+            app:layout_constraintStart_toEndOf="@+id/markerInfoImage"
+            app:layout_constraintTop_toBottomOf="@+id/markerInfoTitle"
+            app:layout_constraintVertical_bias="0.0" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,12 +16,6 @@ class CollectionFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        /*val centerlist = listOf("Place 01", "Place 02", "Place 03")
-
-        var listView = view?.findViewById(R.id.location_list_view) as ListView
-        val adapter = ArrayAdapter(this.context, android.R.layout.simple_list_item_1, centerlist)
-        listView.adapter = adapter*/
-
     }
 
     override fun onCreateView(

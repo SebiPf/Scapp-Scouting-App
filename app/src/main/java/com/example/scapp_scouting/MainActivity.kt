@@ -19,10 +19,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
         addFragement(collectionFragment)
         addFragement(profileFragment)
-        addFragement(mapsFragment)  //Startbildschirm
+        addFragement(mapsFragment)
+
+        showHideFragment(mapsFragment) //Startbildschirm
 
         bottom_navigation = findViewById(R.id.bottom_navigation)
 
@@ -46,11 +49,10 @@ class MainActivity : AppCompatActivity() {
 
     fun showHideFragment(fragment: Fragment) {
         var ft = supportFragmentManager.beginTransaction()
-        //evtl. Doppelung durch Fade mit mehreren aktiven Fragments
-        ft.setCustomAnimations(
+        /*ft.setCustomAnimations(
             android.R.animator.fade_in,
             android.R.animator.fade_out
-        )
+        )*/
         if(fragment.equals(mapsFragment)) {
             ft.hide(collectionFragment)
             ft.hide(profileFragment)
