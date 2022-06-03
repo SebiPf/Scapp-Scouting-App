@@ -17,21 +17,24 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/navigationSearchView"
         tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="-48dp"
-        tools:layout_editor_absoluteY="16dp">
+        tools:layout_editor_absoluteX="0dp">
 
         <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="2" />
 
         <Button
             android:id="@+id/btnChangeMapType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Kartentyp ändern" />
+            android:text="Kartentyp ändern"
+            android:textColor="#303030"
+            android:backgroundTint="@color/white"/>
 
         <Space
             android:layout_width="0dp"
@@ -42,7 +45,9 @@
             android:id="@+id/btnIncreaseRadius"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="+200m" />
+            android:text="+200m"
+            android:textColor="#303030"
+            android:backgroundTint="@color/white"/>
 
         <Space
             android:layout_width="0dp"
@@ -53,35 +58,14 @@
             android:id="@+id/btnDecreaseRadius"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="-200m" />
+            android:text="-200m"
+            android:textColor="#303030"
+            android:backgroundTint="@color/white"/>
 
         <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
-        <!-- androidx.appcompat.widget.SearchView or Searchview-->
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/navigationSearchView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:queryHint="search"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            android:layout_weight="2" />
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -97,5 +81,22 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:rippleColor="@color/white" />
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/navigationSearchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:queryHint="search"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:queryBackground="@drawable/bg_white_rounded"
+        app:submitBackground="@drawable/bg_white_rounded"
+        android:background="@drawable/bg_white_rounded"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

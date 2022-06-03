@@ -46,10 +46,11 @@ class MainActivity : AppCompatActivity() {
 
     fun showHideFragment(fragment: Fragment) {
         var ft = supportFragmentManager.beginTransaction()
-        /*ft.setCustomAnimations(
+        //evtl. Doppelung durch Fade mit mehreren aktiven Fragments
+        ft.setCustomAnimations(
             android.R.animator.fade_in,
             android.R.animator.fade_out
-        )*/
+        )
         if(fragment.equals(mapsFragment)) {
             ft.hide(collectionFragment)
             ft.hide(profileFragment)
