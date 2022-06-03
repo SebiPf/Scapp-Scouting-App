@@ -17,28 +17,54 @@ class MainActivity : AppCompatActivity() {
 
     // TODO: State Handling (durch show() und hide()?)
 
-    override fun onCreate(savedInsanceState: Bundle?) {
-        super.onCreate(savedInsanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        replaceFragement(mapsFragment)  //Startbildschirm
+        addFragement(collectionFragment)
+        addFragement(profileFragment)
+        addFragement(mapsFragment)  //Startbildschirm
 
         bottom_navigation = findViewById(R.id.bottom_navigation)
 
         bottom_navigation.setOnItemSelectedListener {
             when(it.itemId){
-                R.id.maps -> replaceFragement(mapsFragment)
-                R.id.collection -> replaceFragement(collectionFragment)
-                R.id.profile -> replaceFragement(profileFragment)
+                R.id.maps -> showHideFragment(mapsFragment)
+                R.id.collection -> showHideFragment(collectionFragment)
+                R.id.profile -> showHideFragment(profileFragment)
             }
             true
         }
     }
 
-    private fun replaceFragement(fragment: Fragment) {
+    private fun addFragement(fragment: Fragment) {
         if(fragment != null) {
             val transaction = supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.fragment_container, fragment)
+            transaction.add(R.id.fragment_container, fragment)
             transaction.commit()
         }
+    }
+
+    fun showHideFragment(fragment: Fragment) {
+        var ft = supportFragmentManager.beginTransaction()
+        /*ft.setCustomAnimations(
+            android.R.animator.fade_in,
+            android.R.animator.fade_out
+        )*/
+        if(fragment.equals(mapsFragment)) {
+            ft.hide(collectionFragment)
+            ft.hide(profileFragment)
+            ft.show(mapsFragment)
+        }
+        else if(fragment.equals(collectionFragment)) {
+            ft.hide(mapsFragment)
+            ft.hide(profileFragment)
+            ft.show(collectionFragment)
+        }
+        else if(fragment.equals(profileFragment)) {
+            ft.hide(mapsFragment)
+            ft.hide(collectionFragment)
+            ft.show(profileFragment)
+        }
+        ft.commit()
     }
 }

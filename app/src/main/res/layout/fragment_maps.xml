@@ -71,7 +71,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
-        <SearchView
+        <!-- androidx.appcompat.widget.SearchView or Searchview-->
+        <androidx.appcompat.widget.SearchView
             android:id="@+id/navigationSearchView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -81,7 +82,6 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
-
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

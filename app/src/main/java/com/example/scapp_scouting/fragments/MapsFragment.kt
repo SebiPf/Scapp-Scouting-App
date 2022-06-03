@@ -83,17 +83,23 @@ class MapsFragment : Fragment() {
 
         //Aktion nach und während der Eingabe im Suchfeld
         //TODO: SearchView reparieren
-        /*val searchView = view.findViewById<View>(R.id.navigationSearchView)
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
+
+        val searchView = view.findViewById<View>(R.id.navigationSearchView)
+        checkSearchView(searchView as SearchView)
+
+        return view
+    }
+
+    private fun checkSearchView(search: SearchView) {
+        search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                setNewLocation(query.toString())
                 return false
             }
             override fun onQueryTextChange(newText: String): Boolean {
                 return true
             }
-        })*/
-
-        return view
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
