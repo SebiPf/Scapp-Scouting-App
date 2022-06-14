@@ -1,11 +1,13 @@
 package com.example.scapp_scouting
 
+import com.google.android.gms.maps.model.LatLng
+
 //@kotlinx.serialization.Serializable
 data class Post(
-    val Id: Double,
+
     val UserId: Double,
     val Title: String,
-    //val Coodinates: Array,
+    val Coodinates: LatLng,
     val Description: String,
     val Img: String
 )

@@ -1,5 +1,6 @@
 package com.example.scapp_scouting
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ class MainActivity : AppCompatActivity() {
     private val mapsFragment = MapsFragment()
     private val collectionFragment = CollectionFragment()
     private val profileFragment = ProfileFragment()
+    private val createmarker = CreateMarker()
     private lateinit var bottom_navigation: BottomNavigationView
 
     // TODO: State Handling (durch show() und hide()?)
@@ -37,7 +39,9 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
+
     }
+
 
     private fun addFragement(fragment: Fragment) {
         if(fragment != null) {
