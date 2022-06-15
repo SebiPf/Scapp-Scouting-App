@@ -3,20 +3,18 @@ package com.example.scapp_scouting
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import kotlinx.android.synthetic.main.activity_create_marker.*
-import java.io.IOException
 import java.util.*
 import javax.annotation.Nullable
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 class CreateMarker : AppCompatActivity() {
@@ -26,6 +24,8 @@ class CreateMarker : AppCompatActivity() {
     var GALLERY_REQ_CODE = 1
     var storage: FirebaseStorage? = FirebaseStorage.getInstance();
     var storageReference: StorageReference? = storage?.getReference();
+    private val ImageList = ArrayList<Uri>()
+    var imgnames: MutableList<String> = ArrayList()
 
     //lateinit var ImgView: ImageView
 
@@ -60,13 +60,7 @@ class CreateMarker : AppCompatActivity() {
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        startActivityForResult(
-            Intent.createChooser(
-                intent,
-                "Select Image from here..."
-            ),
-            GALLERY_REQ_CODE
-        )
+        startActivityForResult(intent, GALLERY_REQ_CODE)
     }
     @Override
     protected override fun onActivityResult(requestCode: Int, resultCode: Int, @Nullable data: Intent?) {
@@ -75,10 +69,27 @@ class CreateMarker : AppCompatActivity() {
 
 
                 if (data != null) {
-                    if (data.data != null) {
+                    if (data.clipData != null) {
                         //ImgView.setImageURI(data.data)
-                        filePath = data.data
-                        try {
+                        //filePath = data.data
+                        val count: Int? = data.clipData?.itemCount
+
+                        var CurrentImageSelect = 0
+
+                        while (CurrentImageSelect < count!!) {
+                            val imageuri: Uri? = data.clipData?.getItemAt(CurrentImageSelect)?.getUri()
+                            if (imageuri != null) {
+                                ImageList.add(imageuri)
+                            }
+
+                            CurrentImageSelect = CurrentImageSelect + 1
+                        }
+                        //textView.setVisibility(View.VISIBLE)
+                        //textView.setText("You Have Selected " + ImageList.size + " Pictures")
+                        //choose.setVisibility(View.GONE)
+
+
+                        /*try {
                             val bitmap = MediaStore.Images.Media
                                 .getBitmap(
                                     contentResolver,
@@ -88,17 +99,40 @@ class CreateMarker : AppCompatActivity() {
                             //ImgView!!.setImageBitmap(bitmap)
                         }catch (ioe: IOException){
                             println(ioe.message)
-                        }
+                        }*/
 
                     }
 
         }
     }
     fun upload(){
-
+        //add referencees
         val intent = getIntent()
         val Post: MutableMap<String, Any> = HashMap()
-        if (filePath != null){
+
+        val ImageFolder = FirebaseStorage.getInstance().reference.child("ImageFolder")
+
+            var uploads = 0
+            while (uploads < ImageList.size) {
+                val Image = ImageList[uploads]
+                val uuid = UUID.randomUUID().toString()
+                imgnames.add("gs://scapp-scouting.appspot.com/images/" + uuid)
+                val imagename: StorageReference =
+                    ImageFolder.child("image/" + uuid)
+                imagename.putFile(ImageList[uploads])
+
+                uploads++
+            }
+
+
+
+
+
+
+
+
+
+        /*if (filePath != null){
             // Defining the child of storageReference
             val uuid = UUID.randomUUID().toString()
 
@@ -114,11 +148,11 @@ class CreateMarker : AppCompatActivity() {
                 ref.putFile(filePath!!)
             }
 
-        }
+        }*/
 
 
 
-
+        Post.put("Img", imgnames)
 
 
         //val img = intent1
@@ -160,4 +194,6 @@ class CreateMarker : AppCompatActivity() {
     }
 
 }
+
+
 
