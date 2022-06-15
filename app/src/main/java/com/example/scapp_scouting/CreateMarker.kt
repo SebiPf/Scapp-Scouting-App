@@ -59,6 +59,7 @@ class CreateMarker : AppCompatActivity() {
         val intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         startActivityForResult(
             Intent.createChooser(
                 intent,
@@ -100,6 +101,7 @@ class CreateMarker : AppCompatActivity() {
         if (filePath != null){
             // Defining the child of storageReference
             val uuid = UUID.randomUUID().toString()
+
             val ref = storageReference?.child(
 
                 "images/" + uuid
@@ -154,6 +156,8 @@ class CreateMarker : AppCompatActivity() {
 
             }
             .addOnFailureListener { e -> Log.w( "Error adding document", e) }
+        finish()
     }
+
 }
 
