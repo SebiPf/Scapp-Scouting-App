@@ -1,34 +1,34 @@
 package com.example.scapp_scouting
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import kotlinx.android.synthetic.main.activity_create_marker.*
 import java.io.IOException
-import java.net.URL
 import java.util.*
 import javax.annotation.Nullable
-import kotlin.collections.HashMap
 
 
 class CreateMarker : AppCompatActivity() {
 
 
-    var btnSelect: android.widget.Button? = findViewById(R.id.ImgButton);
-    var btnUpload:android.widget.Button? = findViewById(R.id.popup_window_button);
-    var imageView:android.widget.ImageView? = findViewById(R.id.imgView);
     var filePath: Uri? = null
-    var GALLERY_REQ_CODE = 22
+    var GALLERY_REQ_CODE = 1
     var storage: FirebaseStorage? = FirebaseStorage.getInstance();
     var storageReference: StorageReference? = storage?.getReference();
+
+    //lateinit var ImgView: ImageView
+
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
         overridePendingTransition(0, 0)
@@ -36,19 +36,24 @@ class CreateMarker : AppCompatActivity() {
         setContentView(R.layout.activity_create_marker);
 
         //ImgView = findViewById(R.id.imageView) as ImageView
-
-        btnSelect?.setOnClickListener{
+        val imgButton= findViewById(R.id.ImgButton) as Button
+        imgButton?.setOnClickListener {
 
             SelectImage()
 
         }
         //val btn_click_me = findViewById(R.id.popup_window_button) as Button
         // set on-click listener
-        btnUpload?.setOnClickListener {
+        val uploadButton= findViewById(R.id.popup_window_button) as Button
+        uploadButton?.setOnClickListener {
+
             upload()
         }
     }
+
+
     private fun SelectImage() {
+
 
         // Defining Implicit Intent to mobile gallery
         val intent = Intent()
@@ -67,38 +72,41 @@ class CreateMarker : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
 
-        if (resultCode== RESULT_OK){
-            if (resultCode== GALLERY_REQ_CODE){
+
                 if (data != null) {
                     if (data.data != null) {
                         //ImgView.setImageURI(data.data)
                         filePath = data.data
-                        try{
+                        try {
                             val bitmap = MediaStore.Images.Media
                                 .getBitmap(
                                     contentResolver,
                                     filePath
                                 )
-                            imageView!!.setImageBitmap(bitmap)
+                            //val ImgView = findViewById(R.id.imageView) as ImageView
+                            //ImgView!!.setImageBitmap(bitmap)
                         }catch (ioe: IOException){
-                           println(ioe.message)
+                            println(ioe.message)
                         }
 
                     }
-                }
-            }
+
         }
     }
     fun upload(){
-        if (filePath != null){
-            val progressDialog = ProgressDialog(this)
-            progressDialog.setTitle("Uploading...")
-            progressDialog.show()
 
+        val intent = getIntent()
+        val Post: MutableMap<String, Any> = HashMap()
+        if (filePath != null){
             // Defining the child of storageReference
+            val uuid = UUID.randomUUID().toString()
             val ref = storageReference?.child(
-                "images/" + UUID.randomUUID().toString()
+
+                "images/" + uuid
             )
+            if (ref != null) {
+                Post.put("Img", "gs://scapp-scouting.appspot.com/images/" + uuid)
+            };
 
             if (ref != null) {
                 ref.putFile(filePath!!)
@@ -108,8 +116,7 @@ class CreateMarker : AppCompatActivity() {
 
 
 
-        val intent = getIntent()
-        val Post: MutableMap<String, Any> = HashMap()
+
 
 
         //val img = intent1
@@ -131,7 +138,7 @@ class CreateMarker : AppCompatActivity() {
 
 
 
-        Post.put("Img", "Turing");
+
 
         text   = findViewById<EditText>(R.id.popup_window_title);
         val title = text.text.toString()
@@ -149,5 +156,4 @@ class CreateMarker : AppCompatActivity() {
             .addOnFailureListener { e -> Log.w( "Error adding document", e) }
     }
 }
-
 

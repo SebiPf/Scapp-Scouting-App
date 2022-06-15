@@ -1,5 +1,7 @@
 package com.example.scapp_scouting.fragments
 
+import android.content.Intent
+import android.content.Intent.getIntent
 import android.graphics.Color
 import android.location.Geocoder
 import android.location.Location
@@ -8,8 +10,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import com.example.scapp_scouting.CreateMarker
 import com.example.scapp_scouting.R
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -19,6 +21,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+
 
 class MapsFragment : Fragment() {
 
@@ -61,7 +64,10 @@ class MapsFragment : Fragment() {
                 .snippet(coordinates[0].countryName.toString())
         )
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentMapLocation, 14.0f))
+        googleMap.setOnMapClickListener {
 
+            OpenCreateMarker(latLng = it)
+        }
         //TODO: currentMapLocation mit aktuellem Standort definieren?
     }
 
@@ -174,4 +180,17 @@ class MapsFragment : Fragment() {
 
         return startPoint.distanceTo(endPoint)
     }
+    fun OpenCreateMarker(latLng: LatLng){
+
+        val intent = Intent(this.context, CreateMarker::class.java)
+
+        val lat = latLng.latitude.toString()
+        val lng = latLng.longitude.toString()
+
+        intent.putExtra("latetude", lat)
+        intent.putExtra("longetude", lng)
+        startActivity(intent)
+    }
+
+
 }

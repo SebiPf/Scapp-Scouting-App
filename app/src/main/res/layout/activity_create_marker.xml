@@ -98,6 +98,8 @@
                     android:layout_margin="20dp"
                     android:background="#9E1C40"
                     android:gravity="center"
+                    android:minHeight="200dp"
+                    android:minWidth="100dp"
 
                     app:layout_constraintBottom_toTopOf="@+id/ImgButton"
                     app:layout_constraintEnd_toEndOf="parent"
