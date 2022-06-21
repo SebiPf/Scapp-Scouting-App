@@ -36,6 +36,7 @@ class MapsFragment : Fragment() {
 
     //Variablen für das InfoWindow
     private lateinit var infoWindow : View
+    private lateinit var markerSelected: String
     private var infoWindowStatus = false
 
     //Variablen für die Datenbank
@@ -72,6 +73,7 @@ class MapsFragment : Fragment() {
         var infoWindowTitle = view?.findViewById<TextView>(R.id.markerInfoTitle)
         var infoWindowSnippet = view?.findViewById<TextView>(R.id.markerInfoSnippet)
         gMap.setOnMarkerClickListener { marker ->
+            //TODO: Handling beim Klick anpassen
             if(infoWindowStatus == false) {
                 slideUp(infoWindow)
                 infoWindowStatus = true
@@ -81,10 +83,23 @@ class MapsFragment : Fragment() {
                 if (infoWindowSnippet != null) {
                     infoWindowSnippet.text = marker.snippet.toString()
                 }
+                markerSelected = marker.snippet.toString()
             }
-            else {
+            else if (markerSelected != marker.snippet.toString()){
+                slideUp(infoWindow)
+                infoWindowStatus = true
+                if (infoWindowTitle != null) {
+                    infoWindowTitle.text = marker.title.toString()
+                }
+                if (infoWindowSnippet != null) {
+                    infoWindowSnippet.text = marker.snippet.toString()
+                }
+                infoWindowStatus = false
+            }
+            else{
                 slideDown(infoWindow)
                 infoWindowStatus = false
+                markerSelected = ""
             }
             true
         }
@@ -177,6 +192,9 @@ class MapsFragment : Fragment() {
             currentCircleRadius = 1000.0             // Zurücksetzen des Circle-Radius
             gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentMapLocation, 14.0f))
             gMap.clear()                             // Bestehende Kreise und Marker entfernen
+
+            //TODO: Handling des InfoWindow bei neuer Location anpassen
+
             showCircleWithRadius(currentCircleRadius) //Kreis anzeigen nach Zurücksetzen des Radius
             showMarkerInRadius()                   // Marker im Radius neu setzen
 
@@ -198,7 +216,7 @@ class MapsFragment : Fragment() {
                     var tempMarkerPosition = LatLng(tempLatitude, tempLongitude)
 
                     if(getDistanceBetweenTwoPoints(currentMapLocation, tempMarkerPosition) <= currentCircleRadius) {
-                        addMarker(tempMarkerPosition, "title", "snippet")
+                        addMarker(tempMarkerPosition, document.data["Title"] as String, document.id.toString())
                     }
                 }
             }
