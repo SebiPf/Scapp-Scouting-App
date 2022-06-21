@@ -1,7 +1,6 @@
 package com.example.scapp_scouting.fragments
 
 import android.content.Intent
-import android.content.Intent.getIntent
 import android.graphics.Color
 import android.location.Geocoder
 import android.location.Location
@@ -21,6 +20,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.widget.TextView
+
 
 
 class MapsFragment : Fragment() {
@@ -28,6 +31,9 @@ class MapsFragment : Fragment() {
     private lateinit var currentMapLocation: LatLng
     private var currentCircleRadius: Double = 1000.0
     private lateinit var gMap: GoogleMap
+
+    private lateinit var infoWindow : View
+    private var infoWindowStatus = false
 
     private val callback = OnMapReadyCallback { googleMap ->
         gMap = googleMap
@@ -59,16 +65,76 @@ class MapsFragment : Fragment() {
         googleMap.addMarker(             // Test zum Setzen eines Markers
             MarkerOptions()
                 .position(currentMapLocation)
-                .title(coordinates[0].postalCode.toString() + " " + coordinates[0].locality)
+                //.title(coordinates[0].postalCode.toString() + " " + coordinates[0].locality)
+                .title("I-Bau HFU")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_icon_bounded)) // alternatively: marker_icon
-                .snippet(coordinates[0].countryName.toString())
+                //.snippet(coordinates[0].countryName.toString())
+                .snippet(coordinates[0].locality.toString())
         )
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentMapLocation, 14.0f))
         googleMap.setOnMapClickListener {
 
             OpenCreateMarker(latLng = it)
         }
+
+        var infoWindowTitle = view?.findViewById<TextView>(R.id.markerInfoTitle)
+        var infoWindowSnippet = view?.findViewById<TextView>(R.id.markerInfoSnippet)
+        googleMap.setOnMarkerClickListener { marker ->
+            if(infoWindowStatus == false) {
+                slideUp(infoWindow)
+                infoWindowStatus = true
+                if (infoWindowTitle != null) {
+                    infoWindowTitle.text = marker.title.toString()
+                }
+                if (infoWindowSnippet != null) {
+                    infoWindowSnippet.text = marker.snippet.toString()
+                }
+            }
+            else {
+                slideDown(infoWindow)
+                infoWindowStatus = false
+            }
+            true
+        }
+
         //TODO: currentMapLocation mit aktuellem Standort definieren?
+    }
+
+    fun slideDown(view: View) {
+        view.animate()
+            .translationY(view.height.toFloat())
+            .alpha(0f)
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    // superfluous restoration
+                    view.visibility = View.GONE
+                    view.alpha = 1f
+                    view.translationY = 0f
+                }
+            })
+    }
+    fun slideUp(view: View) {
+        view.visibility = View.VISIBLE
+        view.alpha = 0f
+        if (view.height > 0) {
+            slideUpNow(view)
+        } else {
+            // wait till height is measured
+            view.post { slideUpNow(view) }
+        }
+    }
+
+    private fun slideUpNow(view: View) {
+        view.translationY = view.height.toFloat()
+        view.animate()
+            .translationY(0f)
+            .alpha(1f)
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    view.visibility = View.VISIBLE
+                    view.alpha = 1f
+                }
+            })
     }
 
     override fun onCreateView(
@@ -89,7 +155,14 @@ class MapsFragment : Fragment() {
 
         //Aktion nach und während der Eingabe im Suchfeld
         //TODO: SearchView reparieren
-        /*val searchView = view.findViewById<View>(R.id.navigationSearchView)
+        //val searchView = view.findViewById<View>(R.id.navigationSearchView)
+        //checkSearchView(searchView as SearchView)
+
+        infoWindow = view.findViewById<View>(R.id.markerInfoWindow);
+
+        return view
+    }
+    /*val searchView = view.findViewById<View>(R.id.navigationSearchView)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 return false
@@ -97,10 +170,7 @@ class MapsFragment : Fragment() {
             override fun onQueryTextChange(newText: String): Boolean {
                 return true
             }
-        })*/
-
-        return view
-    }
+    })*/
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
