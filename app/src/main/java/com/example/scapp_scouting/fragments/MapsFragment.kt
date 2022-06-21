@@ -23,7 +23,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.widget.TextView
-
+import androidx.appcompat.widget.SearchView
 
 
 class MapsFragment : Fragment() {
@@ -153,24 +153,28 @@ class MapsFragment : Fragment() {
         val btnDecreaseRadius = view.findViewById<View>(R.id.btnDecreaseRadius)
         btnDecreaseRadius.setOnClickListener { decreaseCircleRadius() }
 
-        //Aktion nach und während der Eingabe im Suchfeld
-        //TODO: SearchView reparieren
-        //val searchView = view.findViewById<View>(R.id.navigationSearchView)
-        //checkSearchView(searchView as SearchView)
-
         infoWindow = view.findViewById<View>(R.id.markerInfoWindow);
+
+        //Aktion nach und während der Eingabe im Suchfeld
+        val searchView = view.findViewById<View>(R.id.navigationSearchView)
+        checkSearchView(searchView as SearchView)
 
         return view
     }
-    /*val searchView = view.findViewById<View>(R.id.navigationSearchView)
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+    private fun checkSearchView(search: SearchView) {
+        search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
+                setNewLocation(query.toString())
+                Log.i("TAG","Press querysubmit")
                 return false
             }
             override fun onQueryTextChange(newText: String): Boolean {
+                Log.i("TAG","Press querytextchange")
                 return true
             }
-    })*/
+        })
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
