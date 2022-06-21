@@ -53,8 +53,6 @@ class CreateMarker : AppCompatActivity() {
 
 
     private fun SelectImage() {
-
-
         // Defining Implicit Intent to mobile gallery
         val intent = Intent()
         intent.type = "image/*"
@@ -65,9 +63,6 @@ class CreateMarker : AppCompatActivity() {
     @Override
     protected override fun onActivityResult(requestCode: Int, resultCode: Int, @Nullable data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
-
-
                 if (data != null) {
                     if (data.clipData != null) {
                         //ImgView.setImageURI(data.data)
@@ -179,16 +174,13 @@ class CreateMarker : AppCompatActivity() {
         text   = findViewById<EditText>(R.id.popup_window_title);
         val title = text.text.toString()
         Post.put("Title", title)
-
         Post.put("UserId", 2);
 
         val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
         db.collection("Posts")
             .add(Post)
-            .addOnSuccessListener { documentReference ->
-
-            }
+            .addOnSuccessListener { documentReference -> }
             .addOnFailureListener { e -> Log.w( "Error adding document", e) }
         finish()
     }
