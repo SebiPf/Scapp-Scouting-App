@@ -12,11 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ScappScouting">
         <activity
-            android:name=".DetailView"
-            android:exported="false"
-            android:label="@string/title_activity_detail_view"
-            android:theme="@style/Theme.ScappScouting.NoActionBar" />
-        <activity
             android:name=".CreateMarker"
             android:exported="false" />
         <!--

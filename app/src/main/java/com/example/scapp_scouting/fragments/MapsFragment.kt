@@ -113,9 +113,9 @@ class MapsFragment : Fragment() {
                 if (infoWindowImage != null && marker.snippet != null) {
                     try {
                         Log.i("Snippet", marker.snippet.toString())
-                        var imgToken = marker.snippet!!.substring(39, 75)
+                        var imgToken = marker.snippet!!.substring(32, 86)
                         Log.i("Snippet", imgToken)
-                        FirebaseStorage.getInstance().reference.child("ImageFolder/image/$imgToken").downloadUrl.addOnSuccessListener {
+                        FirebaseStorage.getInstance().reference.child(imgToken).downloadUrl.addOnSuccessListener {
                             var uri = it
                             val options: RequestOptions = RequestOptions()
                                 .centerCrop()
@@ -142,9 +142,9 @@ class MapsFragment : Fragment() {
                 if (infoWindowImage != null && marker.snippet != null) {
                     try {
                         Log.i("Snippet", marker.snippet.toString())
-                        var imgToken = marker.snippet!!.substring(39, 75)
+                        var imgToken = marker.snippet!!.substring(32, 86)
                         Log.i("Snippet", imgToken)
-                        FirebaseStorage.getInstance().reference.child("ImageFolder/image/$imgToken").downloadUrl.addOnSuccessListener {
+                        FirebaseStorage.getInstance().reference.child(imgToken).downloadUrl.addOnSuccessListener {
                             var uri = it
                             val options: RequestOptions = RequestOptions()
                                 .centerCrop()
