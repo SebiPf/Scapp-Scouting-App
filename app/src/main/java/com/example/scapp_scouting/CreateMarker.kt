@@ -4,13 +4,13 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import kotlinx.android.synthetic.main.fragment_profile.*
 import java.util.*
 import javax.annotation.Nullable
 import kotlin.collections.ArrayList
@@ -76,9 +76,36 @@ class CreateMarker : AppCompatActivity() {
                             if (imageuri != null) {
                                 ImageList.add(imageuri)
                             }
+                            //val imgView= findViewById(R.id.imgView) as ImageView
+                            //imgView.setImageURI(imageuri)
+                            var a = CurrentImageSelect
+
+                            val imageView = ImageView(this)
+                            // setting height and width of imageview
+                            imageView.layoutParams = RelativeLayout.LayoutParams(200, 200)
+                            imageView.id = CurrentImageSelect
+                            imageView.x = 10F //setting margin from left
+                            imageView.y = 10F //setting margin from top
+                            val layout = findViewById(R.id.imgviewcontainer) as LinearLayout
+                            layout?.addView(imageView)
+                            if(a<4){
+                                var layout1 = layout.getChildAt(a+1) as ImageView
+                                layout1.setImageURI(imageuri)
+                            }
+                            if(count!!>4){
+                                val textView = findViewById(R.id.imgcount) as TextView
+                                var num = count -4
+                                textView.text = "+"+ num
+
+                            }
+
+
+
+
 
                             CurrentImageSelect = CurrentImageSelect + 1
                         }
+
                         //textView.setVisibility(View.VISIBLE)
                         //textView.setText("You Have Selected " + ImageList.size + " Pictures")
                         //choose.setVisibility(View.GONE)
@@ -97,11 +124,19 @@ class CreateMarker : AppCompatActivity() {
                         }*/
 
                     }
+                    else {
+                        val imageuri: Uri? = data.data!!
+                        if (imageuri != null) {
+                            ImageList.add(imageuri)
+                            //val imgView= findViewById(R.id.imgView) as ImageView
+                            //imgView.setImageURI(imageuri)
+                        }
+                    }
 
         }
     }
     fun upload(){
-        //add referencees
+
         val intent = getIntent()
         val Post: MutableMap<String, Any> = HashMap()
 
@@ -111,7 +146,7 @@ class CreateMarker : AppCompatActivity() {
             while (uploads < ImageList.size) {
                 val Image = ImageList[uploads]
                 val uuid = UUID.randomUUID().toString()
-                imgnames.add("gs://scapp-scouting.appspot.com/images/" + uuid)
+                imgnames.add("gs://scapp-scouting.appspot.com/ImageFolder/image/" + uuid)
                 val imagename: StorageReference =
                     ImageFolder.child("image/" + uuid)
                 imagename.putFile(ImageList[uploads])
