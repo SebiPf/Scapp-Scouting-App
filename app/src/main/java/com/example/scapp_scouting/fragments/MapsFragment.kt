@@ -23,9 +23,12 @@ import com.google.android.gms.maps.model.MarkerOptions
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.fragment_maps.*
 
 class MapsFragment : Fragment() {
 
@@ -36,8 +39,11 @@ class MapsFragment : Fragment() {
 
     //Variablen für das InfoWindow
     private lateinit var infoWindow : View
-    private lateinit var markerSelected: String
+    private var markerSelected = ""
     private var infoWindowStatus = false
+
+    //Variablen für  LocationAdd
+    private var addLocationStatus = false
 
     //Variablen für die Datenbank
     private val db = Firebase.firestore
@@ -66,14 +72,18 @@ class MapsFragment : Fragment() {
 
         //Listener zur Erstellung einer neuen Location
         gMap.setOnMapClickListener {
-            OpenCreateMarker(latLng = it)
+            if(addLocationStatus){
+                addLocationStatus = false
+                slideUp(btnAddLocation)
+                openCreateMarker(latLng = it)
+            }
         }
 
         //InfoWindow (Wird angezeigt bei Klick auf Marker)
-        var infoWindowTitle = view?.findViewById<TextView>(R.id.markerInfoTitle)
-        var infoWindowSnippet = view?.findViewById<TextView>(R.id.markerInfoSnippet)
+        val infoWindowTitle = view?.findViewById<TextView>(R.id.markerInfoTitle)
+        val infoWindowSnippet = view?.findViewById<TextView>(R.id.markerInfoSnippet)
         gMap.setOnMarkerClickListener { marker ->
-            if(infoWindowStatus == false) {
+            if(!infoWindowStatus) {
                 infoWindowStatus = true
                 markerSelected = marker.snippet.toString()
                 slideUp(infoWindow)
@@ -120,7 +130,12 @@ class MapsFragment : Fragment() {
         val btnDecreaseRadius = view.findViewById<View>(R.id.btnDecreaseRadius)
         btnDecreaseRadius.setOnClickListener { decreaseCircleRadius() }
 
-        infoWindow = view.findViewById<View>(R.id.markerInfoWindow);
+        val btnAddLocation = view.findViewById<View>(R.id.btnAddLocation)
+        btnAddLocation.setOnClickListener {
+            addLocation()
+        }
+
+        infoWindow = view.findViewById(R.id.markerInfoWindow)
 
         //Aktion nach und während der Eingabe im Suchfeld
         val searchView = view.findViewById<View>(R.id.navigationSearchView)
@@ -175,7 +190,7 @@ class MapsFragment : Fragment() {
     private fun checkSearchView(search: SearchView) {
         search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                setNewLocation(query.toString())
+                setNewLocation(query)
                 return false
             }
             override fun onQueryTextChange(newText: String): Boolean {
@@ -210,13 +225,13 @@ class MapsFragment : Fragment() {
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
-                    var tempCoordinates = document.data.getValue("Coordinates") as HashMap<Double, Double>
-                    var tempLatitude = tempCoordinates.getValue(tempCoordinates.keys.first())
-                    var tempLongitude = tempCoordinates.getValue(tempCoordinates.keys.last())
-                    var tempMarkerPosition = LatLng(tempLatitude, tempLongitude)
+                    val tempCoordinates = document.data.getValue("Coordinates") as HashMap<Double, Double>
+                    val tempLatitude = tempCoordinates.getValue(tempCoordinates.keys.first())
+                    val tempLongitude = tempCoordinates.getValue(tempCoordinates.keys.last())
+                    val tempMarkerPosition = LatLng(tempLatitude, tempLongitude)
 
                     if(getDistanceBetweenTwoPoints(currentMapLocation, tempMarkerPosition) <= currentCircleRadius) {
-                        addMarker(tempMarkerPosition, document.data["Title"] as String, document.id.toString())
+                        addMarker(tempMarkerPosition, document.data["Title"] as String, document.id)
                     }
                 }
             }
@@ -234,16 +249,25 @@ class MapsFragment : Fragment() {
                 .snippet(snippet)
         )
     }
-    fun getDistanceBetweenTwoPoints(start: LatLng, end: LatLng) : Float {
+    private fun getDistanceBetweenTwoPoints(start: LatLng, end: LatLng) : Float {
         val startPoint = Location("locationA")
-        startPoint.setLatitude(start.latitude)
-        startPoint.setLongitude(start.longitude)
+        startPoint.latitude = start.latitude
+        startPoint.longitude = start.longitude
 
         val endPoint = Location("locationA")
-        endPoint.setLatitude(end.latitude)
-        endPoint.setLongitude(end.longitude)
+        endPoint.latitude = end.latitude
+        endPoint.longitude = end.longitude
 
         return startPoint.distanceTo(endPoint)
+    }
+
+    //Neue Location mit Marker hinzufügen
+    private fun addLocation(){
+        if(!addLocationStatus){
+            addLocationStatus = true
+            slideDown(btnAddLocation)
+            Toast.makeText(this.context,"Click on map to create new Location",Toast.LENGTH_LONG).show()
+        }
     }
 
     //Anzeige und Änderungen am Suchradius
@@ -256,11 +280,11 @@ class MapsFragment : Fragment() {
                 .fillColor(0x22ff0000)
         )
     }
-    fun increaseCircleRadius(){
+    private fun increaseCircleRadius(){
         currentCircleRadius += 200               // Radius vergrößern
         updateCircleRadius(currentCircleRadius)
     }
-    fun decreaseCircleRadius(){
+    private fun decreaseCircleRadius(){
         currentCircleRadius -= 200               // Radius verkleinern
         updateCircleRadius(currentCircleRadius)
     }
@@ -277,7 +301,7 @@ class MapsFragment : Fragment() {
     }
 
     //Weitere Funktionen
-    fun changeMapType(){
+    private fun changeMapType(){
         when (gMap.mapType) {
             GoogleMap.MAP_TYPE_SATELLITE -> {
                 gMap.mapType = GoogleMap.MAP_TYPE_NORMAL
@@ -290,7 +314,7 @@ class MapsFragment : Fragment() {
             }
         }
     }
-    fun OpenCreateMarker(latLng: LatLng){
+    private fun openCreateMarker(latLng: LatLng){
 
         val intent = Intent(this.context, CreateMarker::class.java)
 
