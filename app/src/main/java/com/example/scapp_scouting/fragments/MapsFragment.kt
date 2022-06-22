@@ -80,6 +80,11 @@ class MapsFragment : Fragment() {
 
         //Listener zur Erstellung einer neuen Location
         gMap.setOnMapClickListener {
+            //infoWindow verschwindet beim Klick auf die Karte
+            infoWindowStatus = false;
+            slideDown(infoWindow)
+
+            //Fenster für das Hinzufügen einer neuen Location wird geöffnet
             if (addLocationStatus) {
                 addLocationStatus = false
                 slideUp(btnAddLocation)
