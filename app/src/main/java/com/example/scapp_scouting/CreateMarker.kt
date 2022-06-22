@@ -128,6 +128,15 @@ class CreateMarker : AppCompatActivity() {
                         val imageuri: Uri? = data.data!!
                         if (imageuri != null) {
                             ImageList.add(imageuri)
+                            val imageView = ImageView(this)
+                            // setting height and width of imageview
+                            imageView.layoutParams = RelativeLayout.LayoutParams(500, 500)
+                            imageView.x = 10F //setting margin from left
+                            imageView.y = 10F //setting margin from top
+                            val layout = findViewById(R.id.imgviewcontainer) as LinearLayout
+                            layout?.addView(imageView)
+
+                            imageView.setImageURI(imageuri)
                             //val imgView= findViewById(R.id.imgView) as ImageView
                             //imgView.setImageURI(imageuri)
                         }
