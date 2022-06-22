@@ -15,7 +15,7 @@
         android:src="@drawable/location01"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/RoundCorner" />
+        app:shapeAppearanceOverlay="@style/RoundCornerLeft" />
 
     <TextView
         android:id="@+id/textView_heading"
