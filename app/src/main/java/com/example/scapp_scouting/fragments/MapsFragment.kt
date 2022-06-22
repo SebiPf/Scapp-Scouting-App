@@ -73,28 +73,27 @@ class MapsFragment : Fragment() {
         var infoWindowTitle = view?.findViewById<TextView>(R.id.markerInfoTitle)
         var infoWindowSnippet = view?.findViewById<TextView>(R.id.markerInfoSnippet)
         gMap.setOnMarkerClickListener { marker ->
-            //TODO: Handling beim Klick anpassen
             if(infoWindowStatus == false) {
-                slideUp(infoWindow)
                 infoWindowStatus = true
+                markerSelected = marker.snippet.toString()
+                slideUp(infoWindow)
                 if (infoWindowTitle != null) {
                     infoWindowTitle.text = marker.title.toString()
                 }
                 if (infoWindowSnippet != null) {
                     infoWindowSnippet.text = marker.snippet.toString()
                 }
-                markerSelected = marker.snippet.toString()
             }
             else if (markerSelected != marker.snippet.toString()){
-                slideUp(infoWindow)
                 infoWindowStatus = true
+                markerSelected = marker.snippet.toString()
+                slideUp(infoWindow)
                 if (infoWindowTitle != null) {
                     infoWindowTitle.text = marker.title.toString()
                 }
                 if (infoWindowSnippet != null) {
                     infoWindowSnippet.text = marker.snippet.toString()
                 }
-                infoWindowStatus = false
             }
             else{
                 slideDown(infoWindow)
@@ -187,16 +186,17 @@ class MapsFragment : Fragment() {
     fun setNewLocation(newLocation: String){
         val geocoder = Geocoder(this.context)
         try {
-            val coordinates = geocoder.getFromLocationName(newLocation, 1)  // add these two lines
+            val coordinates = geocoder.getFromLocationName(newLocation, 1)
             currentMapLocation = LatLng(coordinates[0].latitude, coordinates[0].longitude)
-            currentCircleRadius = 1000.0             // Zurücksetzen des Circle-Radius
+            currentCircleRadius = 1000.0                    // Zurücksetzen des Circle-Radius
             gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentMapLocation, 14.0f))
-            gMap.clear()                             // Bestehende Kreise und Marker entfernen
+            gMap.clear()                                    // Bestehende Kreise und Marker entfernen
 
-            //TODO: Handling des InfoWindow bei neuer Location anpassen
+            infoWindowStatus = false                        // Clear infoWindow-Status bei Location-Wechsel der Suche
+            slideDown(infoWindow)
 
-            showCircleWithRadius(currentCircleRadius) //Kreis anzeigen nach Zurücksetzen des Radius
-            showMarkerInRadius()                   // Marker im Radius neu setzen
+            showCircleWithRadius(currentCircleRadius)       // Kreis anzeigen nach Zurücksetzen des Radius
+            showMarkerInRadius()                            // Marker im Radius neu setzen
 
         } catch (e: Exception) {
             Log.e("MapErrors", "Keine Koordinaten zur Zieleingabe gefunden. Fehlermeldung: $e")
