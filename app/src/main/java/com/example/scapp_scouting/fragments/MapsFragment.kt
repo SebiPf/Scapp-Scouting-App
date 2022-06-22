@@ -1,7 +1,10 @@
 package com.example.scapp_scouting.fragments
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
@@ -9,7 +12,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
 import com.example.scapp_scouting.CreateMarker
 import com.example.scapp_scouting.R
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -20,15 +30,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.widget.SearchView
-import androidx.core.view.isVisible
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.fragment_maps.*
+import java.util.ArrayList
+
 
 class MapsFragment : Fragment() {
 
@@ -38,7 +45,7 @@ class MapsFragment : Fragment() {
     private lateinit var gMap: GoogleMap
 
     //Variablen für das InfoWindow
-    private lateinit var infoWindow : View
+    private lateinit var infoWindow: View
     private var markerSelected = ""
     private var infoWindowStatus = false
 
@@ -58,7 +65,8 @@ class MapsFragment : Fragment() {
         gMap.mapType = GoogleMap.MAP_TYPE_SATELLITE // Map-Style
 
         // Geocoding and Marker
-        val coordinates = geocoder.getFromLocationName("Furtwangen,I-Bau", 1)  // add these two lines
+        val coordinates =
+            geocoder.getFromLocationName("Furtwangen,I-Bau", 1)  // add these two lines
         currentMapLocation = LatLng(coordinates[0].latitude, coordinates[0].longitude)
 
         //Anfangsradius für die Suche (aktuell 1km)
@@ -72,7 +80,7 @@ class MapsFragment : Fragment() {
 
         //Listener zur Erstellung einer neuen Location
         gMap.setOnMapClickListener {
-            if(addLocationStatus){
+            if (addLocationStatus) {
                 addLocationStatus = false
                 slideUp(btnAddLocation)
                 openCreateMarker(latLng = it)
@@ -81,31 +89,71 @@ class MapsFragment : Fragment() {
 
         //InfoWindow (Wird angezeigt bei Klick auf Marker)
         val infoWindowTitle = view?.findViewById<TextView>(R.id.markerInfoTitle)
-        val infoWindowSnippet = view?.findViewById<TextView>(R.id.markerInfoSnippet)
+        val infoWindowImage = view?.findViewById<ImageView>(R.id.markerInfoImage)
         gMap.setOnMarkerClickListener { marker ->
-            if(!infoWindowStatus) {
+            if (!infoWindowStatus) {
                 infoWindowStatus = true
-                markerSelected = marker.snippet.toString()
+                markerSelected = marker.id
                 slideUp(infoWindow)
                 if (infoWindowTitle != null) {
                     infoWindowTitle.text = marker.title.toString()
                 }
-                if (infoWindowSnippet != null) {
-                    infoWindowSnippet.text = marker.snippet.toString()
+                if (infoWindowImage != null && marker.snippet != null) {
+                    try {
+                        Log.i("Snippet", marker.snippet.toString())
+                        var imgToken = marker.snippet!!.substring(39, 75)
+                        Log.i("Snippet", imgToken)
+                        FirebaseStorage.getInstance().reference.child("ImageFolder/image/$imgToken").downloadUrl.addOnSuccessListener {
+                            var uri = it
+                            val options: RequestOptions = RequestOptions()
+                                .centerCrop()
+                                .placeholder(R.drawable.placeholder_01)
+                                .error(R.drawable.placeholder_02)
+                            Glide.with(this)
+                                .load(uri)
+                                .apply(options)
+                                .into(infoWindowImage)
+                        }
+
+                    } catch (e: Exception) {
+                        Log.e("MapErrors", "Bild im infoWindow konnte nicht geladen werden: $e")
+                        Glide.with(this)
+                            .load(R.drawable.placeholder_02)
+                            .into(infoWindowImage)
+                    }
                 }
-            }
-            else if (markerSelected != marker.snippet.toString()){
+            } else if (markerSelected != marker.id) {
                 infoWindowStatus = true
-                markerSelected = marker.snippet.toString()
+                markerSelected = marker.id
                 slideUp(infoWindow)
                 if (infoWindowTitle != null) {
                     infoWindowTitle.text = marker.title.toString()
                 }
-                if (infoWindowSnippet != null) {
-                    infoWindowSnippet.text = marker.snippet.toString()
+                if (infoWindowImage != null && marker.snippet != null) {
+                    try {
+                        Log.i("Snippet", marker.snippet.toString())
+                        var imgToken = marker.snippet!!.substring(39, 75)
+                        Log.i("Snippet", imgToken)
+                        FirebaseStorage.getInstance().reference.child("ImageFolder/image/$imgToken").downloadUrl.addOnSuccessListener {
+                            var uri = it
+                            val options: RequestOptions = RequestOptions()
+                                .centerCrop()
+                                .placeholder(R.drawable.placeholder_01)
+                                .error(R.drawable.placeholder_02)
+                            Glide.with(this)
+                                .load(uri)
+                                .apply(options)
+                                .into(infoWindowImage)
+                        }
+
+                    } catch (e: Exception) {
+                        Log.e("MapErrors", "Bild im infoWindow konnte nicht geladen werden: $e")
+                        Glide.with(this)
+                            .load(R.drawable.placeholder_02)
+                            .into(infoWindowImage)
+                    }
                 }
-            }
-            else{
+            } else {
                 slideDown(infoWindow)
                 infoWindowStatus = false
                 markerSelected = ""
@@ -163,6 +211,7 @@ class MapsFragment : Fragment() {
                 }
             })
     }
+
     fun slideUp(view: View) {
         view.visibility = View.VISIBLE
         view.alpha = 0f
@@ -173,6 +222,7 @@ class MapsFragment : Fragment() {
             view.post { slideUpNow(view) }
         }
     }
+
     private fun slideUpNow(view: View) {
         view.translationY = view.height.toFloat()
         view.animate()
@@ -193,12 +243,14 @@ class MapsFragment : Fragment() {
                 setNewLocation(query)
                 return false
             }
+
             override fun onQueryTextChange(newText: String): Boolean {
                 return true
             }
         })
     }
-    fun setNewLocation(newLocation: String){
+
+    fun setNewLocation(newLocation: String) {
         val geocoder = Geocoder(this.context)
         try {
             val coordinates = geocoder.getFromLocationName(newLocation, 1)
@@ -207,7 +259,8 @@ class MapsFragment : Fragment() {
             gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentMapLocation, 14.0f))
             gMap.clear()                                    // Bestehende Kreise und Marker entfernen
 
-            infoWindowStatus = false                        // Clear infoWindow-Status bei Location-Wechsel der Suche
+            infoWindowStatus =
+                false                        // Clear infoWindow-Status bei Location-Wechsel der Suche
             slideDown(infoWindow)
 
             showCircleWithRadius(currentCircleRadius)       // Kreis anzeigen nach Zurücksetzen des Radius
@@ -219,19 +272,37 @@ class MapsFragment : Fragment() {
     }
 
     //Auswahl und Anzeigen der Marker im Radius
-    private fun showMarkerInRadius(){
+    private fun showMarkerInRadius() {
         db.collection("Posts")
             //.whereEqualTo("capital", true)
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
-                    val tempCoordinates = document.data.getValue("Coordinates") as HashMap<Double, Double>
+                    val tempCoordinates =
+                        document.data.getValue("Coordinates") as HashMap<Double, Double>
                     val tempLatitude = tempCoordinates.getValue(tempCoordinates.keys.first())
                     val tempLongitude = tempCoordinates.getValue(tempCoordinates.keys.last())
                     val tempMarkerPosition = LatLng(tempLatitude, tempLongitude)
 
-                    if(getDistanceBetweenTwoPoints(currentMapLocation, tempMarkerPosition) <= currentCircleRadius) {
-                        addMarker(tempMarkerPosition, document.data["Title"] as String, document.id)
+                    var tempSnippet = ""
+                    try {
+                        //TODO Ausnahmefälle testen
+                        val temp = document.data["Img"] as ArrayList<*>
+                        tempSnippet = temp[0] as String
+                    } catch (e: Exception) {
+                        Log.e("Error", "Snippet konnte dem Marker nicht angehängt werden: $e")
+                    }
+
+                    if (getDistanceBetweenTwoPoints(
+                            currentMapLocation,
+                            tempMarkerPosition
+                        ) <= currentCircleRadius
+                    ) {
+                        addMarker(
+                            tempMarkerPosition,
+                            document.data["Title"].toString(),
+                            tempSnippet
+                        )
                     }
                 }
             }
@@ -239,17 +310,18 @@ class MapsFragment : Fragment() {
                 Log.w("FirebaseGet", "Error getting documents.", exception)
             }
     }
-    private fun addMarker(position: LatLng, title: String, snippet: String){
+
+    private fun addMarker(position: LatLng, title: String, photoURL: String) {
         gMap.addMarker(
             MarkerOptions()
                 .position(position)
                 .title(title)
-                //.title(document.data["Title"] as String)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_icon_bounded)) // alternatively: marker_icon
-                .snippet(snippet)
+                .snippet(photoURL)
         )
     }
-    private fun getDistanceBetweenTwoPoints(start: LatLng, end: LatLng) : Float {
+
+    private fun getDistanceBetweenTwoPoints(start: LatLng, end: LatLng): Float {
         val startPoint = Location("locationA")
         startPoint.latitude = start.latitude
         startPoint.longitude = start.longitude
@@ -262,16 +334,17 @@ class MapsFragment : Fragment() {
     }
 
     //Neue Location mit Marker hinzufügen
-    private fun addLocation(){
-        if(!addLocationStatus){
+    private fun addLocation() {
+        if (!addLocationStatus) {
             addLocationStatus = true
             slideDown(btnAddLocation)
-            Toast.makeText(this.context,"Click on map to create new Location",Toast.LENGTH_LONG).show()
+            Toast.makeText(this.context, "Click on map to create new Location", Toast.LENGTH_LONG)
+                .show()
         }
     }
 
     //Anzeige und Änderungen am Suchradius
-    private fun showCircleWithRadius(radius: Double){
+    private fun showCircleWithRadius(radius: Double) {
         gMap.addCircle(             // Generierung des ersten Kreises, bzw. Radius für die Anzeige von Markern
             CircleOptions()
                 .center(currentMapLocation)
@@ -280,15 +353,18 @@ class MapsFragment : Fragment() {
                 .fillColor(0x22ff0000)
         )
     }
-    private fun increaseCircleRadius(){
+
+    private fun increaseCircleRadius() {
         currentCircleRadius += 200               // Radius vergrößern
         updateCircleRadius(currentCircleRadius)
     }
-    private fun decreaseCircleRadius(){
+
+    private fun decreaseCircleRadius() {
         currentCircleRadius -= 200               // Radius verkleinern
         updateCircleRadius(currentCircleRadius)
     }
-    private fun updateCircleRadius(radius: Double){
+
+    private fun updateCircleRadius(radius: Double) {
         gMap.clear()                             // Bestehende Kreise und Marker entfernen
         gMap.addCircle(                          // Kreis mit vorgegebenem Radius einfügen
             CircleOptions()
@@ -301,7 +377,7 @@ class MapsFragment : Fragment() {
     }
 
     //Weitere Funktionen
-    private fun changeMapType(){
+    private fun changeMapType() {
         when (gMap.mapType) {
             GoogleMap.MAP_TYPE_SATELLITE -> {
                 gMap.mapType = GoogleMap.MAP_TYPE_NORMAL
@@ -314,7 +390,8 @@ class MapsFragment : Fragment() {
             }
         }
     }
-    private fun openCreateMarker(latLng: LatLng){
+
+    private fun openCreateMarker(latLng: LatLng) {
 
         val intent = Intent(this.context, CreateMarker::class.java)
 
