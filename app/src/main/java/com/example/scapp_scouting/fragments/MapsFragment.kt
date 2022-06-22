@@ -43,6 +43,8 @@ class MapsFragment : Fragment() {
     private lateinit var currentMapLocation: LatLng
     private var currentCircleRadius: Double = 1000.0
     private lateinit var gMap: GoogleMap
+    private val radiusChangeFactor = 500
+    private var zoomFactor = 14.0f
 
     //Variablen für das InfoWindow
     private lateinit var infoWindow: View
@@ -76,12 +78,13 @@ class MapsFragment : Fragment() {
         showMarkerInRadius()
 
         //Kamerafahrt zum Startpunkt der Karte (currentMapLocation)
-        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentMapLocation, 14.0f))
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentMapLocation, zoomFactor))
 
         //Listener zur Erstellung einer neuen Location
         gMap.setOnMapClickListener {
             //infoWindow verschwindet beim Klick auf die Karte
-            infoWindowStatus = false;
+            infoWindowStatus = false
+            markerSelected = ""
             slideDown(infoWindow)
 
             //Fenster für das Hinzufügen einer neuen Location wird geöffnet
@@ -99,6 +102,10 @@ class MapsFragment : Fragment() {
             if (!infoWindowStatus) {
                 infoWindowStatus = true
                 markerSelected = marker.id
+                Log.i("id2", "---")
+                Log.i("id2", "MarkerID: " + marker.id)
+                Log.i("id2", "MarkerSelected: " + markerSelected)
+
                 slideUp(infoWindow)
                 if (infoWindowTitle != null) {
                     infoWindowTitle.text = marker.title.toString()
@@ -119,9 +126,7 @@ class MapsFragment : Fragment() {
                                 .apply(options)
                                 .into(infoWindowImage)
                         }
-
                     } catch (e: Exception) {
-                        Log.e("MapErrors", "Bild im infoWindow konnte nicht geladen werden: $e")
                         Glide.with(this)
                             .load(R.drawable.placeholder_02)
                             .into(infoWindowImage)
@@ -182,6 +187,20 @@ class MapsFragment : Fragment() {
 
         val btnDecreaseRadius = view.findViewById<View>(R.id.btnDecreaseRadius)
         btnDecreaseRadius.setOnClickListener { decreaseCircleRadius() }
+
+        //Weite Ansicht
+        val btnRadiusWeit = view.findViewById<View>(R.id.btnRadiusWeit)
+        btnRadiusWeit.setOnClickListener {
+            infoWindowStatus = false                        // Clear infoWindow-Status bei Location-Wechsel der Suche
+            markerSelected = ""
+            slideDown(infoWindow)
+
+            currentCircleRadius = 10000000.0
+            gMap.clear()
+            showMarkerInRadius()
+            //updateCircleRadius(currentCircleRadius)
+            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentMapLocation, 4.5f))
+        }
 
         val btnAddLocation = view.findViewById<View>(R.id.btnAddLocation)
         btnAddLocation.setOnClickListener {
@@ -246,9 +265,8 @@ class MapsFragment : Fragment() {
         search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 setNewLocation(query)
-                return false
+                return true
             }
-
             override fun onQueryTextChange(newText: String): Boolean {
                 return true
             }
@@ -261,11 +279,12 @@ class MapsFragment : Fragment() {
             val coordinates = geocoder.getFromLocationName(newLocation, 1)
             currentMapLocation = LatLng(coordinates[0].latitude, coordinates[0].longitude)
             currentCircleRadius = 1000.0                    // Zurücksetzen des Circle-Radius
-            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentMapLocation, 14.0f))
+            zoomFactor = 14.0f
+            gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentMapLocation, zoomFactor))
             gMap.clear()                                    // Bestehende Kreise und Marker entfernen
 
-            infoWindowStatus =
-                false                        // Clear infoWindow-Status bei Location-Wechsel der Suche
+            infoWindowStatus = false                        // Clear infoWindow-Status bei Location-Wechsel der Suche
+            markerSelected = ""
             slideDown(infoWindow)
 
             showCircleWithRadius(currentCircleRadius)       // Kreis anzeigen nach Zurücksetzen des Radius
@@ -360,12 +379,14 @@ class MapsFragment : Fragment() {
     }
 
     private fun increaseCircleRadius() {
-        currentCircleRadius += 200               // Radius vergrößern
+        currentCircleRadius += radiusChangeFactor               // Radius vergrößern
+        zoomFactor -= 0.35f
         updateCircleRadius(currentCircleRadius)
     }
 
     private fun decreaseCircleRadius() {
-        currentCircleRadius -= 200               // Radius verkleinern
+        currentCircleRadius -= radiusChangeFactor               // Radius verkleinern
+        zoomFactor += 0.35f
         updateCircleRadius(currentCircleRadius)
     }
 
@@ -379,6 +400,7 @@ class MapsFragment : Fragment() {
                 .fillColor(0x22ff0000)
         )
         showMarkerInRadius()                     // Marker im Radius neu setzen
+        gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentMapLocation, zoomFactor))
     }
 
     //Weitere Funktionen

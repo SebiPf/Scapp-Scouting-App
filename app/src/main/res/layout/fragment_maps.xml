@@ -26,27 +26,14 @@
         <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="2" />
-
-        <Button
-            android:id="@+id/btnChangeMapType"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/white"
-            android:text="Kartentyp ändern"
-            android:textColor="#303030" />
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="0dp"
             android:layout_weight="1" />
 
         <Button
-            android:id="@+id/btnIncreaseRadius"
+            android:id="@+id/btnRadiusWeit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
-            android:text="+200m"
+            android:text="Weite Ansicht"
             android:textColor="#303030" />
 
         <Space
@@ -59,25 +46,52 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
-            android:text="-200m"
+            android:text="-500m"
             android:textColor="#303030" />
 
         <Space
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="2" />
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/btnIncreaseRadius"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:text="+500m"
+            android:textColor="#303030" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnAddLocation"
+        android:id="@+id/btnChangeMapType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="88dp"
         android:backgroundTintMode="add"
         android:clickable="true"
-        android:src="@android:drawable/ic_input_add"
+        android:src="@drawable/ic_round_map"
+        app:backgroundTint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:rippleColor="@color/white" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnAddLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="164dp"
+        android:backgroundTintMode="add"
+        android:clickable="true"
+        android:src="@drawable/ic_baseline_add_location_24"
         app:backgroundTint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
