@@ -16,4 +16,13 @@
         <item name="android:statusBarColor" tools:targetApi="l">#000000</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="Theme.ScappScouting.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.ScappScouting.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.ScappScouting.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

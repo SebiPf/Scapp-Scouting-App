@@ -380,13 +380,13 @@ class MapsFragment : Fragment() {
 
     private fun increaseCircleRadius() {
         currentCircleRadius += radiusChangeFactor               // Radius vergrößern
-        zoomFactor -= 0.35f
+        zoomFactor -= 0.25f
         updateCircleRadius(currentCircleRadius)
     }
 
     private fun decreaseCircleRadius() {
         currentCircleRadius -= radiusChangeFactor               // Radius verkleinern
-        zoomFactor += 0.35f
+        zoomFactor += 0.25f
         updateCircleRadius(currentCircleRadius)
     }
 
