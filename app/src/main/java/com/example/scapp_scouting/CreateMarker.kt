@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -26,7 +27,7 @@ class CreateMarker : AppCompatActivity() {
     var storageReference: StorageReference? = storage?.getReference();
     private val ImageList = ArrayList<Uri>()
     var imgnames: MutableList<String> = ArrayList()
-
+    lateinit var auth: FirebaseAuth
     //lateinit var ImgView: ImageView
 
     @Override
@@ -34,7 +35,7 @@ class CreateMarker : AppCompatActivity() {
         overridePendingTransition(0, 0)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_marker);
-
+        auth = FirebaseAuth.getInstance()
         //ImgView = findViewById(R.id.imageView) as ImageView
         val imgButton= findViewById(R.id.ImgButton) as Button
         imgButton?.setOnClickListener {
@@ -212,13 +213,12 @@ class CreateMarker : AppCompatActivity() {
         Post.put("Description", description);
 
 
-
-
-
         text   = findViewById<EditText>(R.id.popup_window_title);
         val title = text.text.toString()
         Post.put("Title", title)
-        Post.put("UserId", 2);
+
+        val userid = auth.currentUser?.uid.toString()
+        Post.put("UserId", userid);
 
         val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
