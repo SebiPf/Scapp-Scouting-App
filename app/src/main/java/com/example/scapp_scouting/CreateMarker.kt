@@ -100,10 +100,6 @@ class CreateMarker : AppCompatActivity() {
 
                             }
 
-
-
-
-
                             CurrentImageSelect = CurrentImageSelect + 1
                         }
 

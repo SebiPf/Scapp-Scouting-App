@@ -4,9 +4,9 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.location.Geocoder
 import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,7 +19,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
 import com.example.scapp_scouting.CreateMarker
 import com.example.scapp_scouting.R
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -34,7 +33,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.fragment_maps.*
-import java.util.ArrayList
 
 
 class MapsFragment : Fragment() {
@@ -258,6 +256,10 @@ class MapsFragment : Fragment() {
                     view.alpha = 1f
                 }
             })
+    }
+
+    private fun getCurrentLocation(){
+        //TODO
     }
 
     //Funktionen für die Location-Suche

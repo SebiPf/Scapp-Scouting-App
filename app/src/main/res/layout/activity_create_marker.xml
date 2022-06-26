@@ -55,58 +55,65 @@
                 <!--android:minHeight="170dp"-->
 
 
-
-
                 <EditText
                     android:id="@+id/popup_window_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
 
-                    android:gravity="center"
-                    android:text="Title"
-                    android:textAlignment="center"
+                    android:layout_marginStart="16dp"
 
+                    android:layout_marginEnd="16dp"
+                    android:gravity="center"
+                    android:hint="Title"
+                    android:textAlignment="center"
                     android:textSize="30sp"
                     app:autoSizeMaxTextSize="24dp"
                     app:autoSizeTextType="uniform"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.084" />
+
                 <EditText
                     android:id="@+id/popup_window_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_width="0dp"
+                    android:layout_height="189dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="156dp"
+                    android:layout_marginEnd="16dp"
                     android:gravity="center"
-                    android:text="Description"
-                    android:textAlignment="center"
+                    android:hint="Description"
 
+                    android:singleLine="false"
+
+                    android:textAlignment="center"
                     android:textSize="25sp"
                     android:textStyle="bold"
-
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/popup_window_title" />
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <LinearLayout
+                    android:id="@+id/imgviewcontainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/imgviewcontainer"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toTopOf="@+id/ImgButton"
                     app:layout_constraintTop_toBottomOf="@+id/popup_window_text"
-                    tools:ignore="MissingConstraints"
-                    android:orientation="horizontal">
+                    tools:ignore="MissingConstraints">
 
                     <TextView
+                        android:id="@+id/imgcount"
                         android:layout_width="100dp"
                         android:layout_height="80dp"
-                        android:id="@+id/imgcount"
+                        android:layout_marginRight="-5dp"
+                        android:gravity="center"
                         android:textAlignment="center"
                         android:textSize="25sp"
                         android:textStyle="bold"
-                        android:gravity="center"
-                        android:layout_marginRight="-5dp"
 
                         ></TextView>
 
@@ -114,16 +121,18 @@
 
                 <Button
                     android:id="@+id/ImgButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="70dp"
                     android:layout_margin="20dp"
-                    android:background="#9E1C40"
+                    android:background="@drawable/bg_gray_rounded"
                     android:gravity="center"
                     android:text="Upload Image"
+                    app:layout_constraintBottom_toTopOf="@+id/popup_window_button"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.504"
+                    app:layout_constraintHorizontal_bias="0.4"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imgviewcontainer"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0"
                     tools:srcCompat="@tools:sample/avatars" />
 
                 <Button
@@ -131,18 +140,20 @@
                     android:id="@+id/popup_window_button"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="70dp"
                     android:layout_margin="20dp"
-                    android:layout_marginBottom="0dp"
-                    android:background="#851635"
+                    android:background="@drawable/bg_gray_rounded"
                     android:text="Create"
                     android:textAllCaps="false"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
 
-                    app:layout_constraintTop_toBottomOf="@+id/ImgButton"/>
+                    app:layout_constraintHorizontal_bias="0.6"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.906" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

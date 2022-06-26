@@ -47,12 +47,12 @@ class Registration : AppCompatActivity() {
 
         // check pass
         if (email.isBlank() || password.isBlank() || confirmpassword.isBlank()) {
-            Toast.makeText(this, "Email and Password can't be blank", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "email and password can't be blank", Toast.LENGTH_SHORT).show()
             return
         }
 
         if (password != confirmpassword) {
-            Toast.makeText(this, "Password and Confirm Password do not match", Toast.LENGTH_SHORT)
+            Toast.makeText(this, "password and confirm-password do not match", Toast.LENGTH_SHORT)
                 .show()
             return
         }
@@ -62,12 +62,12 @@ class Registration : AppCompatActivity() {
         // email and pass in it.
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this) {
             if (it.isSuccessful) {
-                Toast.makeText(this, "Successfully Singed Up", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "successfully singed up", Toast.LENGTH_SHORT).show()
                 val intent = Intent(this, Login::class.java)
                 startActivity(intent)
                 finish()
             } else {
-                Toast.makeText(this, "Singed Up Failed!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "singed up failed! perhaps try again (with numbers in password etc.)", Toast.LENGTH_SHORT).show()
             }
         }
     }
