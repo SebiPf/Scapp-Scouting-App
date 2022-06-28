@@ -99,8 +99,7 @@ class CreateMarker : AppCompatActivity() {
                                 textView.text = "+"+ num
 
                             }
-
-                            CurrentImageSelect = CurrentImageSelect + 1
+                            currentImageSelect += 1
                         }
 
                         //textView.setVisibility(View.VISIBLE)

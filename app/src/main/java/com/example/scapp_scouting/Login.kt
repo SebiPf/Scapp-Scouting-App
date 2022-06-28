@@ -8,15 +8,16 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class Login : AppCompatActivity() {
     private lateinit var btnRedirectSignUp: TextView
-    lateinit var loginemail: EditText
+    private lateinit var loginemail: EditText
     private lateinit var password: EditText
-    lateinit var btnLogin: Button
+    private lateinit var btnLogin: Button
+    private lateinit var auth: FirebaseAuth
 
-    // Creating firebaseAuth object
-    lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -26,22 +27,25 @@ class Login : AppCompatActivity() {
         password = findViewById(R.id.PasswordLogin)
         auth = FirebaseAuth.getInstance()
 
+        val user = Firebase.auth.currentUser
         btnLogin.setOnClickListener {
-            login()
+            if(user == null){
+                login()
+            }else{
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
         }
         btnRedirectSignUp.setOnClickListener {
             val intent = Intent(this, Registration::class.java)
             startActivity(intent)
             finish()
         }
-
     }
     private fun login() {
         val email = loginemail.text.toString()
         val pass = password.text.toString()
-        // calling signInWithEmailAndPassword(email, pass)
-        // function using Firebase auth object
-        // On successful response Display a Toast
         auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(this) {
             if (it.isSuccessful) {
                 Toast.makeText(this, "successfully logged in", Toast.LENGTH_SHORT).show()
