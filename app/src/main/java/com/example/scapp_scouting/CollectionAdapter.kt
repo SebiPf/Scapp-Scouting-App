@@ -6,14 +6,21 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class CollectionAdapter : RecyclerView.Adapter<CollectionAdapter.ViewHolder>() {
 
+    //Variablen für die Datenbank
+    private val db = Firebase.firestore
+
     //Testvariablen
-    private val mText = arrayOf("Haus1", "Haus2")
-    private val mImages = intArrayOf(R.drawable.profilbild_01, R.drawable.harold)
+    private val mText = arrayOf("Haus1", "Haus2", "huhu", "Haus2", "huhu", "Haus2", "huhu")
+    private val mImages = intArrayOf(R.drawable.profilbild_01, R.drawable.harold, R.drawable.bg02, R.drawable.harold, R.drawable.bg02, R.drawable.harold, R.drawable.bg02)
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+
 
         var itemTitle: TextView
         var itemImage: ImageView
@@ -30,7 +37,7 @@ class CollectionAdapter : RecyclerView.Adapter<CollectionAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
         val v = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.fragment_collection, viewGroup, false)
+            .inflate(R.layout.location_item, viewGroup, false)
         return ViewHolder(v)
     }
 
@@ -40,6 +47,6 @@ class CollectionAdapter : RecyclerView.Adapter<CollectionAdapter.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return mText.size
+        return mText.size //MainActivity.globalCurrentPosts.size
     }
 }

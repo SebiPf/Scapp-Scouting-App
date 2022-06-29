@@ -13,13 +13,6 @@ import com.example.scapp_scouting.R
 
 class CollectionFragment : Fragment() {
 
-    private var layoutManager: RecyclerView.LayoutManager? = null
-    private var adapter: RecyclerView.Adapter<CollectionAdapter.ViewHolder>? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -28,11 +21,11 @@ class CollectionFragment : Fragment() {
     }
 
     override fun onViewCreated(itemView: View, savedInstanceState: Bundle?) {
-        var mRecyclerView = view?.findViewById<View>(R.id.locationsRecyclerView)
+        var mRecyclerView = view?.findViewById<View>(R.id.locationsRecyclerView) as RecyclerView
         super.onViewCreated(itemView, savedInstanceState)
-        mRecyclerView.apply {
-            layoutManager = LinearLayoutManager(activity)
-            adapter = CollectionAdapter()
+        mRecyclerView?.apply {
+            this.layoutManager = LinearLayoutManager(requireContext())
+            this.adapter = CollectionAdapter()
         }
     }
 }
