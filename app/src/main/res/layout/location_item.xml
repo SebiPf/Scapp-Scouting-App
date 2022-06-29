@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:layout_margin="8dp"
-    android:backgroundTint="#00BCD4"
+    android:backgroundTint="#6FB551"
     android:clickable="true"
     app:cardCornerRadius="8dp">
 
@@ -20,7 +20,6 @@
             android:layout_height="100dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/location01"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearanceOverlay="@style/RoundCornerLeft" />
@@ -34,7 +33,6 @@
             android:layout_marginEnd="24dp"
             android:scrollHorizontally="false"
             android:singleLine="true"
-            android:text="Haus am Meer"
             android:textAlignment="viewStart"
             android:textColor="@color/white"
             android:textSize="20sp"
@@ -54,7 +52,6 @@
             android:layout_marginBottom="21dp"
             android:scrollHorizontally="false"
             android:singleLine="true"
-            android:text="Das ist ein toller Text, der einer Beschreibung sehr nahe kommt und deshalb nicht ganz in eine Zeile passen wird."
             android:textAlignment="viewStart"
             android:textColor="@color/white"
             android:textSize="12sp"

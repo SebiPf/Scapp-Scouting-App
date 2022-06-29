@@ -25,7 +25,7 @@ class CollectionFragment : Fragment() {
         super.onViewCreated(itemView, savedInstanceState)
         mRecyclerView?.apply {
             this.layoutManager = LinearLayoutManager(requireContext())
-            this.adapter = CollectionAdapter()
+            this.adapter = CollectionAdapter(this.context)
         }
     }
 }

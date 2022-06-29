@@ -14,20 +14,18 @@ class MainActivity : AppCompatActivity() {
     private val mapsFragment = MapsFragment()
     private val collectionFragment = CollectionFragment()
     private val profileFragment = ProfileFragment()
-    private val createmarker = CreateMarker()
     private lateinit var bottom_navigation: BottomNavigationView
 
     //Globale Variablen
     companion object {
         lateinit var globalCurrentMapLocation : LatLng
-        lateinit var globalCurrentPosts: MutableList<Int>
+        var globalCurrentPosts: MutableList<String> = mutableListOf()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
-        addFragement(collectionFragment)
         addFragement(profileFragment)
         addFragement(mapsFragment)
 
@@ -62,18 +60,19 @@ class MainActivity : AppCompatActivity() {
             android.R.animator.fade_out
         )*/
         if(fragment.equals(mapsFragment)) {
-            ft.hide(collectionFragment)
+            ft.remove(collectionFragment)
             ft.hide(profileFragment)
             ft.show(mapsFragment)
         }
         else if(fragment.equals(collectionFragment)) {
+            addFragement(collectionFragment)
             ft.hide(mapsFragment)
             ft.hide(profileFragment)
             ft.show(collectionFragment)
         }
         else if(fragment.equals(profileFragment)) {
             ft.hide(mapsFragment)
-            ft.hide(collectionFragment)
+            ft.remove(collectionFragment)
             ft.show(profileFragment)
         }
         ft.commit()

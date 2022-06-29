@@ -301,7 +301,7 @@ class MapsFragment : Fragment() {
     //Auswahl und Anzeigen der Marker im Radius
     private fun showMarkerInRadius() {
         //Vorherige Einträge in der globalen Liste löschen
-        //MainActivity.globalCurrentPosts.clear()
+        MainActivity.globalCurrentPosts.clear()
 
         //Neue Einträge suchen und einfügen
         db.collection("Posts")
@@ -329,7 +329,7 @@ class MapsFragment : Fragment() {
                             tempMarkerPosition
                         ) <= currentCircleRadius
                     ) {
-                        //MainActivity.globalCurrentPosts.add(document.data["id"] as Int)
+                        MainActivity.globalCurrentPosts.add(document.id)
                         addMarker(
                             tempMarkerPosition,
                             document.data["Title"].toString(),
