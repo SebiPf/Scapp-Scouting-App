@@ -6,7 +6,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.location.Geocoder
 import android.location.Location
-import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,6 +19,7 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.scapp_scouting.CreateMarker
+import com.example.scapp_scouting.MainActivity
 import com.example.scapp_scouting.R
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -67,7 +67,7 @@ class MapsFragment : Fragment() {
         // Geocoding and Marker
         val coordinates =
             geocoder.getFromLocationName("Furtwangen,I-Bau", 1)  // add these two lines
-        currentMapLocation = LatLng(coordinates[0].latitude, coordinates[0].longitude)
+        setCurrentMapLocation(LatLng(coordinates[0].latitude, coordinates[0].longitude))
 
         //Anfangsradius für die Suche (aktuell 1km)
         showCircleWithRadius(1000.0)
@@ -170,6 +170,11 @@ class MapsFragment : Fragment() {
         }
     }
 
+    private fun setCurrentMapLocation(latLng: LatLng){
+        currentMapLocation = latLng
+        MainActivity.globalCurrentMapLocation = latLng
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -258,10 +263,6 @@ class MapsFragment : Fragment() {
             })
     }
 
-    private fun getCurrentLocation(){
-        //TODO
-    }
-
     //Funktionen für die Location-Suche
     private fun checkSearchView(search: SearchView) {
         search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -279,7 +280,7 @@ class MapsFragment : Fragment() {
         val geocoder = Geocoder(this.context)
         try {
             val coordinates = geocoder.getFromLocationName(newLocation, 1)
-            currentMapLocation = LatLng(coordinates[0].latitude, coordinates[0].longitude)
+            setCurrentMapLocation(LatLng(coordinates[0].latitude, coordinates[0].longitude))
             currentCircleRadius = 1000.0                    // Zurücksetzen des Circle-Radius
             zoomFactor = 14.0f
             gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentMapLocation, zoomFactor))
@@ -299,6 +300,10 @@ class MapsFragment : Fragment() {
 
     //Auswahl und Anzeigen der Marker im Radius
     private fun showMarkerInRadius() {
+        //Vorherige Einträge in der globalen Liste löschen
+        //MainActivity.globalCurrentPosts.clear()
+
+        //Neue Einträge suchen und einfügen
         db.collection("Posts")
             //.whereEqualTo("capital", true)
             .get()
@@ -324,6 +329,7 @@ class MapsFragment : Fragment() {
                             tempMarkerPosition
                         ) <= currentCircleRadius
                     ) {
+                        //MainActivity.globalCurrentPosts.add(document.data["id"] as Int)
                         addMarker(
                             tempMarkerPosition,
                             document.data["Title"].toString(),

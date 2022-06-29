@@ -1,12 +1,12 @@
 package com.example.scapp_scouting
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.scapp_scouting.fragments.CollectionFragment
 import com.example.scapp_scouting.fragments.MapsFragment
 import com.example.scapp_scouting.fragments.ProfileFragment
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -17,7 +17,11 @@ class MainActivity : AppCompatActivity() {
     private val createmarker = CreateMarker()
     private lateinit var bottom_navigation: BottomNavigationView
 
-    // TODO: State Handling (durch show() und hide()?)
+    //Globale Variablen
+    companion object {
+        lateinit var globalCurrentMapLocation : LatLng
+        lateinit var globalCurrentPosts: MutableList<Int>
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             when(it.itemId){
                 R.id.maps -> showHideFragment(mapsFragment)
                 R.id.collection -> showHideFragment(collectionFragment)
-                R.id.profile -> showHideFragment(profileFragment)
+                R.id.profile_username -> showHideFragment(profileFragment)
             }
             true
         }

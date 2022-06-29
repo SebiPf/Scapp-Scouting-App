@@ -9,7 +9,7 @@
         android:icon="@drawable/ic_round_list_alt"
         android:title="Liste"/>
     <item
-        android:id="@+id/profile"
+        android:id="@+id/profile_username"
         android:icon="@drawable/ic_round_person"
         android:title="Profil"/>
 </menu>
