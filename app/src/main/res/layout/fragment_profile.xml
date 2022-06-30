@@ -60,15 +60,15 @@
         app:layout_constraintVertical_bias="0.123" />
 
     <Button
-        android:id="@+id/favorites"
+        android:id="@+id/btnProfileLogout"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:backgroundTint="#000000"
-        android:text="Favoriten"
+        android:text="Logout"
         android:textColor="#FFFFFF"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

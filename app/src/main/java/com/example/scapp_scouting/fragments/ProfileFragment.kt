@@ -16,7 +16,7 @@ import com.google.firebase.auth.FirebaseAuth
 class ProfileFragment : Fragment() {
 
     //Variablen für die Datenbank
-    lateinit var auth: FirebaseAuth
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +41,13 @@ class ProfileFragment : Fragment() {
                 val intent = Intent(activity, OwnCollectionList::class.java)
                 startActivity(intent)
             }catch (e: Exception){ }
+        }
+
+        val btnLogout = view.findViewById<View>(R.id.btnProfileLogout)
+        btnLogout.setOnClickListener {
+            try {
+                auth.signOut()
+            }catch (e: Exception){}
         }
 
 return view
