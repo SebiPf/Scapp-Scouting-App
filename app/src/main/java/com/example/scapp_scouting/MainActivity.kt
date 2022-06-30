@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         lateinit var globalCurrentMapLocation: LatLng
         var globalCurrentPosts: MutableList<String> = mutableListOf()
+        var globalCurrentSearchPosts : MutableList<String> = mutableListOf()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,6 +74,6 @@ class MainActivity : AppCompatActivity() {
             ft.remove(collectionFragment)
             ft.show(profileFragment)
         }
-        ft.commit()
+            ft.commit()
     }
 }

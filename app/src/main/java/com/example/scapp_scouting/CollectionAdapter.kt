@@ -1,14 +1,12 @@
 package com.example.scapp_scouting
 
 import android.content.Intent
-import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -16,6 +14,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class CollectionAdapter(context: android.content.Context) :
@@ -50,7 +50,7 @@ class CollectionAdapter(context: android.content.Context) :
             .addOnSuccessListener { result ->
                 for (document in result) {
                     try {
-                        if (document.id == MainActivity.globalCurrentPosts[i]) {
+                        if (document.id == MainActivity.globalCurrentSearchPosts[i]) {
                             //Titel laden
                             viewHolder.itemTitle.text = document.data["Title"].toString()
 
@@ -60,10 +60,10 @@ class CollectionAdapter(context: android.content.Context) :
 
                             //Bilder laden
                             val temp = document.data["Img"] as ArrayList<*>
-                            var tempSnippet = temp[0] as String
-                            var imgToken = tempSnippet!!.substring(32, 86)
+                            val tempSnippet = temp[0] as String
+                            val imgToken = tempSnippet.substring(32, 86)
                             FirebaseStorage.getInstance().reference.child(imgToken).downloadUrl.addOnSuccessListener {
-                                var uri = it
+                                val uri = it
                                 val options: RequestOptions = RequestOptions()
                                     .centerCrop()
                                     .placeholder(R.drawable.placeholder_01)
@@ -74,9 +74,10 @@ class CollectionAdapter(context: android.content.Context) :
                                     .into(viewHolder.itemImage)
                             }
                             viewHolder.itemView.setOnClickListener {
-                                val intent = Intent(mContext, ListDetailView::class.java).apply {
-                                    putExtra("postID", document.id)
-                                }
+                                val intent =
+                                    Intent(mContext, ListDetailView::class.java).apply {
+                                        putExtra("postID", document.id)
+                                    }
                                 startActivity(mContext, intent, null)
                             }
                         }
@@ -91,6 +92,6 @@ class CollectionAdapter(context: android.content.Context) :
     }
 
     override fun getItemCount(): Int {
-        return MainActivity.globalCurrentPosts.size
+        return MainActivity.globalCurrentSearchPosts.size
     }
 }

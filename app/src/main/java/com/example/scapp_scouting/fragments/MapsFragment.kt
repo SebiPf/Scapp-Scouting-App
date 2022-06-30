@@ -114,16 +114,16 @@ class MapsFragment : Fragment() {
                 if (infoWindowImage != null && marker.snippet != null) {
                     try {
                         infoWindow.setOnClickListener(){
-                            var idToken = marker.snippet!!.substring(89, 109)
+                            val idToken = marker.snippet!!.substring(89, 109)
                             slideDown(infoWindow)
                             infoWindowStatus = false
                             markerSelected = ""
                             view?.let { it1 -> openDetailView(it1.context, idToken) }
                         }
 
-                        var imgToken = marker.snippet!!.substring(32, 86)
+                        val imgToken = marker.snippet!!.substring(32, 86)
                         FirebaseStorage.getInstance().reference.child(imgToken).downloadUrl.addOnSuccessListener {
-                            var uri = it
+                            val uri = it
                             val options: RequestOptions = RequestOptions()
                                 .centerCrop()
                                 .placeholder(R.drawable.placeholder_01)
@@ -149,16 +149,16 @@ class MapsFragment : Fragment() {
                 if (infoWindowImage != null && marker.snippet != null) {
                     try {
                         infoWindow.setOnClickListener(){
-                            var idToken = marker.snippet!!.substring(89, 109)
+                            val idToken = marker.snippet!!.substring(89, 109)
                             slideDown(infoWindow)
                             infoWindowStatus = false
                             markerSelected = ""
                             view?.let { it1 -> openDetailView(it1.context, idToken) }
                         }
 
-                        var imgToken = marker.snippet!!.substring(32, 86)
+                        val imgToken = marker.snippet!!.substring(32, 86)
                         FirebaseStorage.getInstance().reference.child(imgToken).downloadUrl.addOnSuccessListener {
-                            var uri = it
+                            val uri = it
                             val options: RequestOptions = RequestOptions()
                                 .centerCrop()
                                 .placeholder(R.drawable.placeholder_01)
@@ -201,7 +201,7 @@ class MapsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val view: View = inflater.inflate(R.layout.fragment_maps, container, false)
 
         val btnMapType = view.findViewById<View>(R.id.btnChangeMapType)
@@ -324,6 +324,7 @@ class MapsFragment : Fragment() {
     private fun showMarkerInRadius() {
         //Vorherige Einträge in der globalen Liste löschen
         MainActivity.globalCurrentPosts.clear()
+        MainActivity.globalCurrentSearchPosts.clear()
 
         //Neue Einträge suchen und einfügen
         db.collection("Posts")
@@ -353,6 +354,8 @@ class MapsFragment : Fragment() {
                         ) <= currentCircleRadius
                     ) {
                         MainActivity.globalCurrentPosts.add(document.id)
+                        MainActivity.globalCurrentSearchPosts.add(document.id)
+
                         addMarker(
                             tempMarkerPosition,
                             document.data["Title"].toString(),
