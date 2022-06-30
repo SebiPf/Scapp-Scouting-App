@@ -15,12 +15,14 @@ class MainActivity : AppCompatActivity() {
     private val collectionFragment = CollectionFragment()
     private val profileFragment = ProfileFragment()
     private lateinit var bottomNavigation: BottomNavigationView
+    private var statusCollectionOpened = false
 
     //Globale Variablen
     companion object {
         lateinit var globalCurrentMapLocation: LatLng
         var globalCurrentPosts: MutableList<String> = mutableListOf()
         var globalCurrentSearchPosts : MutableList<String> = mutableListOf()
+        var globalCurrentOwnPosts: MutableList<String> = mutableListOf()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,10 +37,17 @@ class MainActivity : AppCompatActivity() {
         bottomNavigation = findViewById(R.id.bottom_navigation)
 
         bottomNavigation.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.maps -> showHideFragment(mapsFragment)
-                R.id.collection -> showHideFragment(collectionFragment)
-                R.id.profile_username -> showHideFragment(profileFragment)
+            if(!statusCollectionOpened){
+                when (it.itemId) {
+                    R.id.maps -> showHideFragment(mapsFragment)
+                    R.id.collection -> showHideFragment(collectionFragment)
+                    R.id.profile_username -> showHideFragment(profileFragment)
+                }
+            } else{
+                when (it.itemId) {
+                    R.id.maps -> showHideFragment(mapsFragment)
+                    R.id.profile_username -> showHideFragment(profileFragment)
+                }
             }
             true
         }
@@ -61,15 +70,18 @@ class MainActivity : AppCompatActivity() {
             android.R.animator.fade_out
         )*/
         if (fragment == mapsFragment) {
+            statusCollectionOpened = false
             ft.remove(collectionFragment)
             ft.hide(profileFragment)
             ft.show(mapsFragment)
         } else if (fragment == collectionFragment) {
+            statusCollectionOpened = true
             addFragement(collectionFragment)
             ft.hide(mapsFragment)
             ft.hide(profileFragment)
             ft.show(collectionFragment)
         } else if (fragment == profileFragment) {
+            statusCollectionOpened = false
             ft.hide(mapsFragment)
             ft.remove(collectionFragment)
             ft.show(profileFragment)

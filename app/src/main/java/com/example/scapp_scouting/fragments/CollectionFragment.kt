@@ -32,12 +32,12 @@ class CollectionFragment : Fragment() {
     }
 
     override fun onViewCreated(itemView: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(itemView, savedInstanceState)
+
         mRecyclerView = view?.findViewById<View>(R.id.locationsRecyclerView) as RecyclerView
         val listSearchView = view?.findViewById<View>(R.id.listSearchView)
 
         checkSearchView(listSearchView as SearchView)
-
-        super.onViewCreated(itemView, savedInstanceState)
         try {
             mRecyclerView.apply {
                 this.layoutManager = LinearLayoutManager(requireContext())

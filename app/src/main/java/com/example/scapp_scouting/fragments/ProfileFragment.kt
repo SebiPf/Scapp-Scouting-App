@@ -1,15 +1,16 @@
 package com.example.scapp_scouting.fragments
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.example.scapp_scouting.R
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import com.example.scapp_scouting.*
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 
 
 class ProfileFragment : Fragment() {
@@ -34,7 +35,15 @@ class ProfileFragment : Fragment() {
         val userIdTextview = view?.findViewById<View>(R.id.profile_userid) as TextView
         userIdTextview.text = "User-ID: ${auth.currentUser?.uid}"
 
-        return view
-    }
+        val btnOwnLocations = view.findViewById<View>(R.id.btnOwnLocations)
+        btnOwnLocations.setOnClickListener {
+            try {
+                val intent = Intent(activity, OwnCollectionList::class.java)
+                startActivity(intent)
+            }catch (e: Exception){ }
+        }
+
+return view
+}
 
 }

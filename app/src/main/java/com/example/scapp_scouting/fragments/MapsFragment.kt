@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -58,6 +59,9 @@ class MapsFragment : Fragment() {
     //Variablen für die Datenbank
     private val db = Firebase.firestore
 
+    //Variablen für Datenbank-Abfragen
+    lateinit var auth: FirebaseAuth
+
     private val callback = OnMapReadyCallback { googleMap ->
         //Initialisierung
         gMap = googleMap
@@ -76,7 +80,7 @@ class MapsFragment : Fragment() {
         showCircleWithRadius(1000.0)
 
         //Lade alle Marker im Anfangsradius
-        showMarkerInRadius()
+        showAndBindMarkerInRadius()
 
         //Kamerafahrt zum Startpunkt der Karte (currentMapLocation)
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentMapLocation, zoomFactor))
@@ -213,6 +217,8 @@ class MapsFragment : Fragment() {
         val btnDecreaseRadius = view.findViewById<View>(R.id.btnDecreaseRadius)
         btnDecreaseRadius.setOnClickListener { decreaseCircleRadius() }
 
+        auth = FirebaseAuth.getInstance()
+
         //Weite Ansicht
         val btnRadiusWeit = view.findViewById<View>(R.id.btnRadiusWeit)
         btnRadiusWeit.setOnClickListener {
@@ -222,7 +228,7 @@ class MapsFragment : Fragment() {
 
             currentCircleRadius = 10000000.0
             gMap.clear()
-            showMarkerInRadius()
+            showAndBindMarkerInRadius()
             //updateCircleRadius(currentCircleRadius)
             gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentMapLocation, 4.5f))
         }
@@ -313,7 +319,7 @@ class MapsFragment : Fragment() {
             slideDown(infoWindow)
 
             showCircleWithRadius(currentCircleRadius)       // Kreis anzeigen nach Zurücksetzen des Radius
-            showMarkerInRadius()                            // Marker im Radius neu setzen
+            showAndBindMarkerInRadius()                            // Marker im Radius neu setzen
 
         } catch (e: Exception) {
             Log.e("MapErrors", "Keine Koordinaten zur Zieleingabe gefunden. Fehlermeldung: $e")
@@ -321,14 +327,14 @@ class MapsFragment : Fragment() {
     }
 
     //Auswahl und Anzeigen der Marker im Radius
-    private fun showMarkerInRadius() {
+    private fun showAndBindMarkerInRadius() {
         //Vorherige Einträge in der globalen Liste löschen
         MainActivity.globalCurrentPosts.clear()
         MainActivity.globalCurrentSearchPosts.clear()
+        MainActivity.globalCurrentOwnPosts.clear()
 
         //Neue Einträge suchen und einfügen
         db.collection("Posts")
-            //.whereEqualTo("capital", true)
             .get()
             .addOnSuccessListener { result ->
                 for (document in result) {
@@ -355,6 +361,10 @@ class MapsFragment : Fragment() {
                     ) {
                         MainActivity.globalCurrentPosts.add(document.id)
                         MainActivity.globalCurrentSearchPosts.add(document.id)
+
+                        if(document.data["UserId"].toString() == auth.currentUser?.uid) {
+                            MainActivity.globalCurrentOwnPosts.add(document.id)
+                        }
 
                         addMarker(
                             tempMarkerPosition,
@@ -433,7 +443,7 @@ class MapsFragment : Fragment() {
                 .strokeColor(Color.RED)
                 .fillColor(0x22ff0000)
         )
-        showMarkerInRadius()                     // Marker im Radius neu setzen
+        showAndBindMarkerInRadius()                     // Marker im Radius neu setzen
         gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentMapLocation, zoomFactor))
     }
 
