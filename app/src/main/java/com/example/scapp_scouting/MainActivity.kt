@@ -14,11 +14,11 @@ class MainActivity : AppCompatActivity() {
     private val mapsFragment = MapsFragment()
     private val collectionFragment = CollectionFragment()
     private val profileFragment = ProfileFragment()
-    private lateinit var bottom_navigation: BottomNavigationView
+    private lateinit var bottomNavigation: BottomNavigationView
 
     //Globale Variablen
     companion object {
-        lateinit var globalCurrentMapLocation : LatLng
+        lateinit var globalCurrentMapLocation: LatLng
         var globalCurrentPosts: MutableList<String> = mutableListOf()
     }
 
@@ -31,10 +31,10 @@ class MainActivity : AppCompatActivity() {
 
         showHideFragment(mapsFragment) //Startbildschirm
 
-        bottom_navigation = findViewById(R.id.bottom_navigation)
+        bottomNavigation = findViewById(R.id.bottom_navigation)
 
-        bottom_navigation.setOnItemSelectedListener {
-            when(it.itemId){
+        bottomNavigation.setOnItemSelectedListener {
+            when (it.itemId) {
                 R.id.maps -> showHideFragment(mapsFragment)
                 R.id.collection -> showHideFragment(collectionFragment)
                 R.id.profile_username -> showHideFragment(profileFragment)
@@ -46,31 +46,29 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun addFragement(fragment: Fragment) {
-        if(fragment != null) {
+        if (fragment != null) {
             val transaction = supportFragmentManager.beginTransaction()
             transaction.add(R.id.fragment_container, fragment)
             transaction.commit()
         }
     }
 
-    fun showHideFragment(fragment: Fragment) {
+    private fun showHideFragment(fragment: Fragment) {
         var ft = supportFragmentManager.beginTransaction()
         /*ft.setCustomAnimations(
             android.R.animator.fade_in,
             android.R.animator.fade_out
         )*/
-        if(fragment.equals(mapsFragment)) {
+        if (fragment == mapsFragment) {
             ft.remove(collectionFragment)
             ft.hide(profileFragment)
             ft.show(mapsFragment)
-        }
-        else if(fragment.equals(collectionFragment)) {
+        } else if (fragment == collectionFragment) {
             addFragement(collectionFragment)
             ft.hide(mapsFragment)
             ft.hide(profileFragment)
             ft.show(collectionFragment)
-        }
-        else if(fragment.equals(profileFragment)) {
+        } else if (fragment == profileFragment) {
             ft.hide(mapsFragment)
             ft.remove(collectionFragment)
             ft.show(profileFragment)

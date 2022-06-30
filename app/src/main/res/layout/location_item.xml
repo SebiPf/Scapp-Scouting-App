@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:layout_margin="8dp"
-    android:backgroundTint="#6FB551"
+    android:backgroundTint="#DDDDDD"
     android:clickable="true"
     app:cardCornerRadius="8dp">
 
@@ -34,7 +34,7 @@
             android:scrollHorizontally="false"
             android:singleLine="true"
             android:textAlignment="viewStart"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -53,7 +53,7 @@
             android:scrollHorizontally="false"
             android:singleLine="true"
             android:textAlignment="viewStart"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

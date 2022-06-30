@@ -1,19 +1,22 @@
 package com.example.scapp_scouting
 
+import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import io.grpc.Context
-import org.w3c.dom.Text
+
 
 class CollectionAdapter(context: android.content.Context) :
     RecyclerView.Adapter<CollectionAdapter.ViewHolder>() {
@@ -32,10 +35,6 @@ class CollectionAdapter(context: android.content.Context) :
             itemTitle = itemView.findViewById(R.id.card_heading)
             itemImage = itemView.findViewById(R.id.card_image)
             itemDescription = itemView.findViewById(R.id.card_descriptiontext)
-
-            itemView.setOnClickListener {
-                //
-            }
         }
     }
 
@@ -52,10 +51,14 @@ class CollectionAdapter(context: android.content.Context) :
                 for (document in result) {
                     try {
                         if (document.id == MainActivity.globalCurrentPosts[i]) {
+                            //Titel laden
                             viewHolder.itemTitle.text = document.data["Title"].toString()
+
+                            //Beschreibung laden
                             viewHolder.itemDescription.text =
                                 document.data["Description"].toString()
 
+                            //Bilder laden
                             val temp = document.data["Img"] as ArrayList<*>
                             var tempSnippet = temp[0] as String
                             var imgToken = tempSnippet!!.substring(32, 86)
@@ -69,6 +72,12 @@ class CollectionAdapter(context: android.content.Context) :
                                     .load(uri)
                                     .apply(options)
                                     .into(viewHolder.itemImage)
+                            }
+                            viewHolder.itemView.setOnClickListener {
+                                val intent = Intent(mContext, ListDetailView::class.java).apply {
+                                    putExtra("postID", document.id)
+                                }
+                                startActivity(mContext, intent, null)
                             }
                         }
                     } catch (e: Exception) {

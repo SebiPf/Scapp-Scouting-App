@@ -2,6 +2,7 @@ package com.example.scapp_scouting.fragments
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.location.Geocoder
@@ -15,10 +16,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.scapp_scouting.CreateMarker
+import com.example.scapp_scouting.ListDetailView
 import com.example.scapp_scouting.MainActivity
 import com.example.scapp_scouting.R
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -110,9 +113,15 @@ class MapsFragment : Fragment() {
                 }
                 if (infoWindowImage != null && marker.snippet != null) {
                     try {
-                        Log.i("Snippet", marker.snippet.toString())
+                        infoWindow.setOnClickListener(){
+                            var idToken = marker.snippet!!.substring(89, 109)
+                            slideDown(infoWindow)
+                            infoWindowStatus = false
+                            markerSelected = ""
+                            view?.let { it1 -> openDetailView(it1.context, idToken) }
+                        }
+
                         var imgToken = marker.snippet!!.substring(32, 86)
-                        Log.i("Snippet", imgToken)
                         FirebaseStorage.getInstance().reference.child(imgToken).downloadUrl.addOnSuccessListener {
                             var uri = it
                             val options: RequestOptions = RequestOptions()
@@ -139,9 +148,15 @@ class MapsFragment : Fragment() {
                 }
                 if (infoWindowImage != null && marker.snippet != null) {
                     try {
-                        Log.i("Snippet", marker.snippet.toString())
+                        infoWindow.setOnClickListener(){
+                            var idToken = marker.snippet!!.substring(89, 109)
+                            slideDown(infoWindow)
+                            infoWindowStatus = false
+                            markerSelected = ""
+                            view?.let { it1 -> openDetailView(it1.context, idToken) }
+                        }
+
                         var imgToken = marker.snippet!!.substring(32, 86)
-                        Log.i("Snippet", imgToken)
                         FirebaseStorage.getInstance().reference.child(imgToken).downloadUrl.addOnSuccessListener {
                             var uri = it
                             val options: RequestOptions = RequestOptions()
@@ -168,6 +183,13 @@ class MapsFragment : Fragment() {
             }
             true
         }
+    }
+
+    private fun openDetailView(context: Context, id: String){
+        val intent = Intent(context, ListDetailView::class.java).apply {
+            putExtra("postID", id)
+        }
+        ContextCompat.startActivity(context, intent, null)
     }
 
     private fun setCurrentMapLocation(latLng: LatLng){
@@ -320,6 +342,7 @@ class MapsFragment : Fragment() {
                         //TODO Ausnahmefälle testen
                         val temp = document.data["Img"] as ArrayList<*>
                         tempSnippet = temp[0] as String
+                        tempSnippet = tempSnippet + " - " + document.id
                     } catch (e: Exception) {
                         Log.e("Error", "Snippet konnte dem Marker nicht angehängt werden: $e")
                     }
