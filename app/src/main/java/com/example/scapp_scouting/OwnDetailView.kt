@@ -9,6 +9,7 @@ import android.widget.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.imageview.ShapeableImageView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -19,11 +20,13 @@ class OwnDetailView : AppCompatActivity() {
     private var postID: String = ""
     private var imgTokenList = mutableListOf<String>()
     private val scrollViewImageSize = 400
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_own_detail_view)
         postID = intent.getStringExtra("postID").toString()
+        auth = FirebaseAuth.getInstance()
 
         createAndFillHorizontalScrollView()
         fillViews()
@@ -145,8 +148,11 @@ class OwnDetailView : AppCompatActivity() {
                     (findViewById<View>(R.id.ownDetailDescription) as TextView).text = result.data?.get("Description") as String
 
                     //Text in detailUserID laden
-                    //(findViewById<View>(R.id.ownDetailUserID) as TextView).text = "User-ID des Erstellers: " + (result.data?.get("UserId") as String)
-                    (findViewById<View>(R.id.ownDetailUserID) as TextView).text = "Dieser Post wurde von dir erstellt."
+                    if(result.data?.get("UserId") != auth.currentUser?.uid){
+                        (findViewById<View>(R.id.ownDetailUserID) as TextView).text = "User-ID des Erstellers: " + (result.data?.get("UserId") as String)
+                    }else{
+                        (findViewById<View>(R.id.ownDetailUserID) as TextView).text = "Dieser Post wurde von dir erstellt."
+                    }
 
                 } catch (e: Exception) {
                     Log.e(

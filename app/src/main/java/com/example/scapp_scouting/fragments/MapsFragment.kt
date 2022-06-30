@@ -47,6 +47,7 @@ class MapsFragment : Fragment() {
     private lateinit var gMap: GoogleMap
     private val radiusChangeFactor = 500
     private var zoomFactor = 14.0f
+    private val startLocation = "Furtwangen"
 
     //Variablen für das InfoWindow
     private lateinit var infoWindow: View
@@ -72,12 +73,11 @@ class MapsFragment : Fragment() {
         gMap.mapType = GoogleMap.MAP_TYPE_SATELLITE // Map-Style
 
         // Geocoding and Marker
-        val coordinates =
-            geocoder.getFromLocationName("Furtwangen,I-Bau", 1)  // add these two lines
+        val coordinates = geocoder.getFromLocationName(startLocation, 1)  // add these two lines
         setCurrentMapLocation(LatLng(coordinates[0].latitude, coordinates[0].longitude))
 
         //Anfangsradius für die Suche (aktuell 1km)
-        showCircleWithRadius(1000.0)
+        showCircleWithRadius(currentCircleRadius)
 
         //Lade alle Marker im Anfangsradius
         showAndBindMarkerInRadius()
@@ -296,6 +296,8 @@ class MapsFragment : Fragment() {
         search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 setNewLocation(query)
+                search.setQuery("", false)
+                search.isIconified = true
                 return true
             }
             override fun onQueryTextChange(newText: String): Boolean {
