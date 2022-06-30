@@ -47,6 +47,8 @@ class ProfileFragment : Fragment() {
         btnLogout.setOnClickListener {
             try {
                 auth.signOut()
+                val intent = Intent(activity, Login::class.java)
+                startActivity(intent)
             }catch (e: Exception){}
         }
 

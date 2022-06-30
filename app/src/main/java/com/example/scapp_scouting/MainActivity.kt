@@ -1,5 +1,6 @@
 package com.example.scapp_scouting
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
+        addFragement(collectionFragment)
         addFragement(profileFragment)
         addFragement(mapsFragment)
 

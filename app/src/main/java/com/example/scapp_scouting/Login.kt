@@ -28,14 +28,15 @@ class Login : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         val user = Firebase.auth.currentUser
-        btnLogin.setOnClickListener {
-            if(user == null){
-                login()
-            }else{
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                finish()
+
+        if(user != null){
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
             }
+
+        btnLogin.setOnClickListener {
+                login()
         }
         btnRedirectSignUp.setOnClickListener {
             val intent = Intent(this, Registration::class.java)

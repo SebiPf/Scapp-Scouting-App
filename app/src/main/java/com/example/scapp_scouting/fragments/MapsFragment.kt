@@ -469,8 +469,8 @@ class MapsFragment : Fragment() {
         val lat = latLng.latitude.toString()
         val lng = latLng.longitude.toString()
 
-        intent.putExtra("latetude", lat)
-        intent.putExtra("longetude", lng)
+        intent.putExtra("latitude", lat)
+        intent.putExtra("longitude", lng)
         startActivity(intent)
     }
 
