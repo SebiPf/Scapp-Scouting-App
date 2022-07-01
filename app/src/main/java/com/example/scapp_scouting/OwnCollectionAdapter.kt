@@ -81,7 +81,7 @@ class OwnCollectionAdapter(context: android.content.Context, uID: String):
                                         }
                                     ContextCompat.startActivity(mContext, intent, null)
                                 } catch (e: Exception){
-                                    Toast.makeText(mContext, e.toString(), Toast.LENGTH_LONG).show()
+                                    //Toast.makeText(mContext, e.toString(), Toast.LENGTH_LONG).show()
                                 }
                             }
                         }

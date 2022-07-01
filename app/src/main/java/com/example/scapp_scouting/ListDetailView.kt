@@ -1,11 +1,13 @@
 package com.example.scapp_scouting
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.imageview.ShapeableImageView
@@ -17,7 +19,7 @@ import com.google.firebase.storage.FirebaseStorage
 
 class ListDetailView : AppCompatActivity() {
 
-    //Variablen für die Datenbankanbindung und die Anzeigen
+    //Variables for the database connection and the displays
     private val db = Firebase.firestore
     private var postID: String = ""
     private var imgTokenList = mutableListOf<String>()
@@ -27,13 +29,14 @@ class ListDetailView : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list_detail_view)
-        auth = FirebaseAuth.getInstance()
 
+        //Get Variable and Instance for Firebase-Authentification
+        auth = FirebaseAuth.getInstance()
         postID = intent.getStringExtra("postID").toString()
 
+        //Fill views
         createAndFillHorizontalScrollView()
         fillViews()
-
     }
 
     private fun createAndFillHorizontalScrollView() {
@@ -42,14 +45,14 @@ class ListDetailView : AppCompatActivity() {
             .get()
             .addOnSuccessListener { result ->
                 try {
-                    //Bildreferenzen aus Firebase ziehen und in einer Liste abspeichern
+                    //Drag image references from Firebase and save them in a list
                     val tempImageList = result.data?.get("Img") as ArrayList<*>
                     for (i in tempImageList.size downTo 1) {
                         imgTokenList.add(tempImageList[i - 1].toString()!!.substring(32, 86))
                     }
 
                     val horizontalScrollView = HorizontalScrollView(this)
-                    //setting height and width
+                    //Setting height and width
                     val layoutParams = LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT
@@ -57,19 +60,19 @@ class ListDetailView : AppCompatActivity() {
                     horizontalScrollView.layoutParams = layoutParams
 
                     val linearLayout = LinearLayout(this)
-                    //setting height and width
+                    //Setting height and width
                     val linearParams = LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT
                     )
                     linearLayout.layoutParams = linearParams
 
-                    //adding horizontal scroll view to the layout
+                    //Adding horizontal scroll view to the layout
                     horizontalScrollView.addView(linearLayout)
 
                     for (item: String in imgTokenList) {
                         val tempImage = ShapeableImageView(this)
-                        //setting height and width
+                        //Setting height and width
                         val params1 = LinearLayout.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT
@@ -90,10 +93,10 @@ class ListDetailView : AppCompatActivity() {
                             50,
                             0
                         )
-                        // drawable folder and setting it to imageview
+                        //Drawable folder and setting it to imageview
                         linearLayout.addView(tempImage)
 
-                        //Bilder anhand der URI den einzelnen ImageViews zuweisen
+                        //Assigning images to individual ImageViews based on the URI
                         FirebaseStorage.getInstance().reference.child(item).downloadUrl.addOnSuccessListener {
                             var uri = it
                             val options: RequestOptions = RequestOptions()
@@ -104,32 +107,41 @@ class ListDetailView : AppCompatActivity() {
                                 .load(uri)
                                 .apply(options)
                                 .into(tempImage)
+
+                            //Add Fullscreen-View when click on Imageview
+                            tempImage.setOnClickListener {
+                                try {
+                                    val intent =
+                                        Intent(this, FullscreenImageView::class.java).apply {
+                                            putExtra("imgToken", item)
+                                        }
+                                    ContextCompat.startActivity(this, intent, null)
+                                } catch (e: Exception){}
+                            }
                         }
                     }
 
-                    //accessing the relative layout where the scrollview will be active
+                    //Accessing the relative layout where the scrollview will be active
                     val linearLayout1 =
                         findViewById<RelativeLayout>(R.id.horizontalScrollViewContainer)
                     linearLayout1?.addView(horizontalScrollView)
-
-
                 } catch (e: Exception) {
                     Log.e(
                         "Error",
-                        "Daten konnten dem DetailView nicht hinzugefügt werden: $e"
+                        "Data could not be added to the DetailView: $e"
                     )
                 }
             }
     }
 
     private fun fillViews() {
-        //Bilder laden
+        //Loading Images
         db.collection("Posts")
             .document(postID)
             .get()
             .addOnSuccessListener { result ->
                 try {
-                    //Bild in HeaderImageView laden
+                    //Load image into HeaderImageView
                     val temp = result.data?.get("Img") as ArrayList<*>
                     var tempSnippet = temp[0] as String
                     var imgToken = tempSnippet!!.substring(32, 86)
@@ -145,13 +157,13 @@ class ListDetailView : AppCompatActivity() {
                             .into(findViewById<View>(R.id.detailHeaderImage) as ImageView)
                     }
 
-                    //Titel in detailTitle laden
+                    //Load title in detailTitle
                     (findViewById<View>(R.id.detailTitle) as TextView).text = result.data?.get("Title") as String
 
-                    //Text in detailDescription laden
+                    //Load text in detailDescription
                     (findViewById<View>(R.id.detailDescription) as TextView).text = result.data?.get("Description") as String
 
-                    //Text in detailUserID laden
+                    //Load text in detailUserID
                     if(result.data?.get("UserId") != auth.currentUser?.uid){
                         (findViewById<View>(R.id.detailUserID) as TextView).text = "User-ID des Erstellers: " + (result.data?.get("UserId") as String)
                     }else{
@@ -161,7 +173,7 @@ class ListDetailView : AppCompatActivity() {
                 } catch (e: Exception) {
                     Log.e(
                         "Error",
-                        "Daten konnten dem DetailView nicht hinzugefügt werden: $e"
+                        "Data could not be added to the DetailView: $e"
                     )
                 }
             }
