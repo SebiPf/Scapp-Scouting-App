@@ -15,7 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 class ProfileFragment : Fragment() {
 
-    //Variablen für die Datenbank
+    //Variables for the database
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,33 +26,38 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
+        //Add currentUser-Mail to view
         val userNameTextview = view?.findViewById<View>(R.id.profile_username) as TextView
         userNameTextview.text = auth.currentUser?.email
 
-        val userIdTextview = view?.findViewById<View>(R.id.profile_userid) as TextView
+        //Add currentUser-ID to view
+        val userIdTextview = view.findViewById<View>(R.id.profile_userid) as TextView
         userIdTextview.text = "User-ID: ${auth.currentUser?.uid}"
 
+        //Handling of Buttonclick -> Shows own locations
         val btnOwnLocations = view.findViewById<View>(R.id.btnOwnLocations)
         btnOwnLocations.setOnClickListener {
             try {
                 val intent = Intent(activity, OwnCollectionList::class.java)
                 startActivity(intent)
-            }catch (e: Exception){ }
+            } catch (e: Exception) {
+            }
         }
 
+        //Handling of Buttonclick -> Logging out and opens Login-Screen
         val btnLogout = view.findViewById<View>(R.id.btnProfileLogout)
         btnLogout.setOnClickListener {
             try {
                 auth.signOut()
                 val intent = Intent(activity, Login::class.java)
                 startActivity(intent)
-            }catch (e: Exception){}
+            } catch (e: Exception) {
+            }
         }
-
-return view
-}
+        return view
+    }
 
 }

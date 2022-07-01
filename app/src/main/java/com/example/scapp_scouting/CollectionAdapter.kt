@@ -21,16 +21,14 @@ import kotlin.collections.ArrayList
 class CollectionAdapter(context: android.content.Context) :
     RecyclerView.Adapter<CollectionAdapter.ViewHolder>() {
 
-    //Variablen für die Datenbank
+    //Variables for the database and displays
     private val db = Firebase.firestore
     private val mContext = context
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
         var itemTitle: TextView
         var itemImage: ImageView
         var itemDescription: TextView
-
         init {
             itemTitle = itemView.findViewById(R.id.card_heading)
             itemImage = itemView.findViewById(R.id.card_image)
@@ -51,14 +49,14 @@ class CollectionAdapter(context: android.content.Context) :
                 for (document in result) {
                     try {
                         if (document.id == MainActivity.globalCurrentSearchPosts[i]) {
-                            //Titel laden
+                            //Loading title
                             viewHolder.itemTitle.text = document.data["Title"].toString()
 
-                            //Beschreibung laden
+                            //Loading description
                             viewHolder.itemDescription.text =
                                 document.data["Description"].toString()
 
-                            //Bilder laden
+                            //Loading Images
                             val temp = document.data["Img"] as ArrayList<*>
                             val tempSnippet = temp[0] as String
                             val imgToken = tempSnippet.substring(32, 86)
@@ -84,7 +82,7 @@ class CollectionAdapter(context: android.content.Context) :
                     } catch (e: Exception) {
                         Log.e(
                             "Error",
-                            "Daten konnten dem CardView nicht hinzugefügt werden: $e"
+                            "Data could not be added to the CardView: $e"
                         )
                     }
                 }

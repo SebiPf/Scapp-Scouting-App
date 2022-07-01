@@ -16,12 +16,11 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.*
 
-
 class CollectionFragment : Fragment() {
 
     lateinit var mRecyclerView: RecyclerView
 
-    //Variablen für die Datenbank
+    //Variables for the database
     private val db = Firebase.firestore
 
     override fun onCreateView(
@@ -37,7 +36,9 @@ class CollectionFragment : Fragment() {
         mRecyclerView = view?.findViewById<View>(R.id.locationsRecyclerView) as RecyclerView
         val listSearchView = view?.findViewById<View>(R.id.listSearchView)
 
+        //checking for new search querys
         checkSearchView(listSearchView as SearchView)
+
         try {
             mRecyclerView.apply {
                 this.layoutManager = LinearLayoutManager(requireContext())
@@ -46,7 +47,7 @@ class CollectionFragment : Fragment() {
         }catch (e:Exception){}
     }
 
-    //Funktionen für die Suche
+    //Search functions
     private fun checkSearchView(search: SearchView) {
         search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
@@ -61,6 +62,7 @@ class CollectionFragment : Fragment() {
         })
     }
 
+    //Get all Locations matching to search query
     private fun selectSearchedLocations(query: String){
         if (query.uppercase(Locale.getDefault()) == "ALLE" || query.uppercase(Locale.getDefault()) == "ALL") {
             RecyclerViewReload()
@@ -72,8 +74,8 @@ class CollectionFragment : Fragment() {
                     .addOnSuccessListener { result ->
                         for (document in result) {
                             try {
-                                var searchFitsTitle = query.uppercase(Locale.getDefault()) in (document.data["Title"] as String).uppercase(Locale.getDefault())
-                                var searchFitsDescription = query.uppercase(Locale.getDefault()) in (document.data["Description"] as String).uppercase(Locale.getDefault())
+                                val searchFitsTitle = query.uppercase(Locale.getDefault()) in (document.data["Title"] as String).uppercase(Locale.getDefault())
+                                val searchFitsDescription = query.uppercase(Locale.getDefault()) in (document.data["Description"] as String).uppercase(Locale.getDefault())
                                 var searchFits = false
                                 if(searchFitsTitle) { searchFits = true }
                                 if(searchFitsDescription) { searchFits = true }
@@ -90,6 +92,8 @@ class CollectionFragment : Fragment() {
         }
     }
 
+    //Refresh (Reload) RecyclerView
+    //Called when data has changed (new search query, ...)
     private fun RecyclerViewReload(){
         MainActivity.globalCurrentSearchPosts.clear()
         MainActivity.globalCurrentSearchPosts = MainActivity.globalCurrentPosts

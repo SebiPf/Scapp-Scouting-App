@@ -9,7 +9,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.storage.FirebaseStorage
 
 class FullscreenImageView : AppCompatActivity() {
-    lateinit var imgToken: String
+    private lateinit var imgToken: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,11 +18,11 @@ class FullscreenImageView : AppCompatActivity() {
         fillViews()
     }
 
+    //Fill data to view
     private fun fillViews(){
         FirebaseStorage.getInstance().reference.child(imgToken).downloadUrl.addOnSuccessListener {
-            var uri = it
+            val uri = it
             val options: RequestOptions = RequestOptions()
-                .centerCrop()
                 .placeholder(R.drawable.placeholder_01)
                 .error(R.drawable.placeholder_02)
             Glide.with(this)

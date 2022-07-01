@@ -16,7 +16,6 @@ import javax.annotation.Nullable
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-
 class CreateMarker : AppCompatActivity() {
 
     private var GALLERY_REQ_CODE = 1
@@ -30,18 +29,17 @@ class CreateMarker : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_marker)
         auth = FirebaseAuth.getInstance()
-        val imgButton= findViewById(R.id.ImgButton) as Button
+        val imgButton= findViewById<Button>(R.id.ImgButton)
         imgButton.setOnClickListener {
-            SelectImage()
+            selectImage()
         }
-        val uploadButton= findViewById(R.id.popup_window_button) as Button
+        val uploadButton= findViewById<Button>(R.id.popup_window_button)
         uploadButton.setOnClickListener {
             upload()
         }
     }
 
-
-    private fun SelectImage() {
+    private fun selectImage() {
         val intent = Intent()
         intent.type = "image/*"
         intent.action = Intent.ACTION_GET_CONTENT
@@ -56,65 +54,66 @@ class CreateMarker : AppCompatActivity() {
                         val count: Int? = data.clipData?.itemCount
                         var currentImageSelect = 0
                         while (currentImageSelect < count!!) {
-                            val imageuri: Uri? = data.clipData?.getItemAt(currentImageSelect)?.getUri()
-                            if (imageuri != null) {
-                                imageList.add(imageuri)
+                            val imageUri: Uri? = data.clipData?.getItemAt(currentImageSelect)?.getUri()
+                            if (imageUri != null) {
+                                imageList.add(imageUri)
                             }
-                            val currimghelp = currentImageSelect
+                            val currImgHelp = currentImageSelect
                             val imageView = ImageView(this)
                             imageView.layoutParams = RelativeLayout.LayoutParams(200, 200)
                             imageView.id = currentImageSelect
                             imageView.x = 10F
                             imageView.y = 10F
-                            val layout = findViewById(R.id.imgviewcontainer) as LinearLayout
+                            val layout = findViewById<LinearLayout>(R.id.imgviewcontainer)
                             layout.addView(imageView)
-                            if(currimghelp<4){
-                                val imginLayout = layout.getChildAt(currimghelp+1) as ImageView
-                                imginLayout.setImageURI(imageuri)
+                            if(currImgHelp<4){
+                                val imgInLayout = layout.getChildAt(currImgHelp+1) as ImageView
+                                imgInLayout.setImageURI(imageUri)
                             }
                             if(count>4){
-                                val textView = findViewById(R.id.imgcount) as TextView
+                                val textView = findViewById<TextView>(R.id.imgcount)
                                 val num = count -4
-                                textView.text = "+"+ num
+                                textView.text = "+$num"
                             }
                             currentImageSelect += 1
                         }
                     }
                     else {
-                        val imageuri: Uri? = data.data!!
-                        if (imageuri != null) {
-                            imageList.add(imageuri)
+                        val imageUri: Uri? = data.data!!
+                        if (imageUri != null) {
+                            imageList.add(imageUri)
                             val imageView = ImageView(this)
                             imageView.layoutParams = RelativeLayout.LayoutParams(500, 500)
                             imageView.x = 10F
                             imageView.y = 10F
-                            val layout = findViewById(R.id.imgviewcontainer) as LinearLayout
+                            val layout = findViewById<LinearLayout>(R.id.imgviewcontainer)
                             layout.addView(imageView)
-                            imageView.setImageURI(imageuri)
+                            imageView.setImageURI(imageUri)
                         }
                     }
         }
     }
+
     private fun upload(){
 
-        val intent = getIntent()
+        val intent = intent
         val post: MutableMap<String, Any> = HashMap()
         val imageFolder = FirebaseStorage.getInstance().reference.child("ImageFolder")
             var uploads = 0
             while (uploads < imageList.size) {
                 val uuid = UUID.randomUUID().toString()
-                imgnames.add("gs://scapp-scouting.appspot.com/ImageFolder/image/" + uuid)
-                val imagename: StorageReference =
-                    imageFolder.child("image/" + uuid)
-                imagename.putFile(imageList[uploads])
+                imgnames.add("gs://scapp-scouting.appspot.com/ImageFolder/image/$uuid")
+                val imageName: StorageReference =
+                    imageFolder.child("image/$uuid")
+                imageName.putFile(imageList[uploads])
                 uploads++
             }
         post["Img"] = imgnames
 
-        val latitudeupload = intent.getStringExtra("latitude")
-        val longitudeupload = intent.getStringExtra("longitude")
-        val latlong = latitudeupload+","+longitudeupload
-        val position = latlong.split(",").toTypedArray()
+        val latitudeUpload = intent.getStringExtra("latitude")
+        val longitudeUpload = intent.getStringExtra("longitude")
+        val latlng = "$latitudeUpload, $longitudeUpload"
+        val position = latlng.split(",").toTypedArray()
         val latitude = position[0].toDouble()
         val longitude = position[1].toDouble()
         val location = LatLng(latitude, longitude)
@@ -135,7 +134,7 @@ class CreateMarker : AppCompatActivity() {
 
         db.collection("Posts")
             .add(post)
-            .addOnSuccessListener { documentReference -> }
+            .addOnSuccessListener { }
             .addOnFailureListener { e -> Log.w( "Error adding document", e) }
         finish()
     }

@@ -1,6 +1,5 @@
 package com.example.scapp_scouting
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -12,12 +11,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
-    private val mapsFragment = MapsFragment()
-    private val collectionFragment = CollectionFragment()
-    private val profileFragment = ProfileFragment()
-    private lateinit var bottomNavigation: BottomNavigationView
-    private var statusCollectionOpened = false
-
     //Globale Variablen
     companion object {
         lateinit var globalCurrentMapLocation: LatLng
@@ -26,19 +19,27 @@ class MainActivity : AppCompatActivity() {
         var globalCurrentOwnPosts: MutableList<String> = mutableListOf()
     }
 
+    //Lokale Variablen für MainActivity
+    private val mapsFragment = MapsFragment()
+    private val collectionFragment = CollectionFragment()
+    private val profileFragment = ProfileFragment()
+    private lateinit var bottomNavigation: BottomNavigationView
+    private var statusCollectionOpened = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
-        addFragement(collectionFragment)
-        addFragement(profileFragment)
-        addFragement(mapsFragment)
+        addFragment(collectionFragment)
+        addFragment(profileFragment)
+        addFragment(mapsFragment)
 
-        showHideFragment(mapsFragment) //Startbildschirm
+        showHideFragment(mapsFragment)     //Startbildschirm
 
         bottomNavigation = findViewById(R.id.bottom_navigation)
 
         bottomNavigation.setOnItemSelectedListener {
+            //statusCollectionOpened prevents a new call and with it an error
             if(!statusCollectionOpened){
                 when (it.itemId) {
                     R.id.maps -> showHideFragment(mapsFragment)
@@ -57,16 +58,17 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun addFragement(fragment: Fragment) {
-        if (fragment != null) {
+    private fun addFragment(fragment: Fragment) {
+        try {
             val transaction = supportFragmentManager.beginTransaction()
             transaction.add(R.id.fragment_container, fragment)
             transaction.commit()
-        }
+        } catch (e: Exception) {}
     }
 
     private fun showHideFragment(fragment: Fragment) {
-        var ft = supportFragmentManager.beginTransaction()
+        val ft = supportFragmentManager.beginTransaction()
+        //Animation sadly leads to error whilst loading O.o
         /*ft.setCustomAnimations(
             android.R.animator.fade_in,
             android.R.animator.fade_out
@@ -78,7 +80,7 @@ class MainActivity : AppCompatActivity() {
             ft.show(mapsFragment)
         } else if (fragment == collectionFragment) {
             statusCollectionOpened = true
-            addFragement(collectionFragment)
+            addFragment(collectionFragment)
             ft.hide(mapsFragment)
             ft.hide(profileFragment)
             ft.show(collectionFragment)
