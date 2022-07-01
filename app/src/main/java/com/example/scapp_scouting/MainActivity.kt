@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         lateinit var globalCurrentMapLocation: LatLng
         var globalCurrentPosts: MutableList<String> = mutableListOf()
         var globalCurrentSearchPosts : MutableList<String> = mutableListOf()
-        var globalCurrentOwnPosts: MutableList<String> = mutableListOf()
+        var globalOwnPosts: MutableList<String> = mutableListOf()
     }
 
     //Lokale Variablen für MainActivity

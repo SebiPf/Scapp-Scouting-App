@@ -48,7 +48,7 @@ class MapsFragment : Fragment() {
     private val radiusChangeFactor = 500
     private var zoomFactor = 14.0f
     private val startLocation = "Furtwangen"
-    private val startMapType = GoogleMap.MAP_TYPE_SATELLITE
+    private val startMapType = GoogleMap.MAP_TYPE_TERRAIN
 
     //Variables for the InfoWindow
     private lateinit var infoWindow: View
@@ -307,7 +307,7 @@ class MapsFragment : Fragment() {
         //Delete previous entries in the global list
         MainActivity.globalCurrentPosts.clear()
         MainActivity.globalCurrentSearchPosts.clear()
-        MainActivity.globalCurrentOwnPosts.clear()
+        MainActivity.globalOwnPosts.clear()
 
         //Search and insert new entries
         db.collection("Posts")
@@ -329,6 +329,10 @@ class MapsFragment : Fragment() {
                         Log.e("Error", "Snippet could not be attached to the marker: $e")
                     }
 
+                    if (document.data["UserId"].toString() == auth.currentUser?.uid) {
+                        MainActivity.globalOwnPosts.add(document.id)
+                    }
+
                     if (getDistanceBetweenTwoPoints(
                             currentMapLocation,
                             tempMarkerPosition
@@ -336,10 +340,6 @@ class MapsFragment : Fragment() {
                     ) {
                         MainActivity.globalCurrentPosts.add(document.id)
                         MainActivity.globalCurrentSearchPosts.add(document.id)
-
-                        if (document.data["UserId"].toString() == auth.currentUser?.uid) {
-                            MainActivity.globalCurrentOwnPosts.add(document.id)
-                        }
 
                         addMarker(
                             tempMarkerPosition,
@@ -456,14 +456,14 @@ class MapsFragment : Fragment() {
     //Change shown type of the map
     private fun changeMapType() {
         when (gMap.mapType) {
-            GoogleMap.MAP_TYPE_SATELLITE -> {
+            GoogleMap.MAP_TYPE_TERRAIN -> {
                 gMap.mapType = GoogleMap.MAP_TYPE_NORMAL
             }
             GoogleMap.MAP_TYPE_NORMAL -> {
-                gMap.mapType = GoogleMap.MAP_TYPE_TERRAIN
+                gMap.mapType = GoogleMap.MAP_TYPE_SATELLITE
             }
             else -> {
-                gMap.mapType = GoogleMap.MAP_TYPE_SATELLITE
+                gMap.mapType = GoogleMap.MAP_TYPE_TERRAIN
             }
         }
     }
