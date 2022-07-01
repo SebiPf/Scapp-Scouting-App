@@ -30,11 +30,11 @@ class CreateMarker : AppCompatActivity() {
         setContentView(R.layout.activity_create_marker)
         auth = FirebaseAuth.getInstance()
         val imgButton = findViewById<Button>(R.id.ImgButton)
-        //Event/Click Listener that starts funktion selectImage
+        //Event/Click Listener that starts function selectImage
         imgButton.setOnClickListener {
             selectImage()
         }
-        //Event/Click Listener that starts funktion upload
+        //Event/Click Listener that starts function upload
         val uploadButton = findViewById<Button>(R.id.popup_window_button)
         uploadButton.setOnClickListener {
             upload()
@@ -55,13 +55,13 @@ class CreateMarker : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, @Nullable data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        //checks wether the data recieved is a single image or multiple
+        //checks wether the data received is a single image or multiple
         if (data != null) {
             if (data.clipData != null) {
                 val count: Int? = data.clipData?.itemCount
                 var currentImageSelect = 0
 
-                //Takes the clipdata and adds the images to a List which is used later also displayes up to 4 Images for the user
+                //Takes the clipdata and adds the images to a List which is used later also displays up to 4 Images for the user
                 while (currentImageSelect < count!!) {
                     val imageUri: Uri? = data.clipData?.getItemAt(currentImageSelect)?.uri
                     if (imageUri != null) {
@@ -133,14 +133,14 @@ class CreateMarker : AppCompatActivity() {
         val latitude = position[0].toDouble()
         val longitude = position[1].toDouble()
         val location = LatLng(latitude, longitude)
-        post["Coordinates"] = location  //adds coordiantes to post
+        post["Coordinates"] = location  //adds coordinates to post
 
-        //takes String from a texview and adds them to post
+        //takes String from a textview and adds them to post
         var text = findViewById<EditText>(R.id.popup_window_text)
         val description = text.text.toString()
         post["Description"] = description
 
-        //takes String from a texview and adds them to post
+        //takes String from a textview and adds them to post
         text = findViewById(R.id.popup_window_title)
         val title = text.text.toString()
         post["Title"] = title
