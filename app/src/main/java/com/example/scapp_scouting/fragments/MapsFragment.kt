@@ -100,7 +100,7 @@ class MapsFragment : Fragment() {
             if (addLocationStatus) {
                 addLocationStatus = false
                 slideUp(btnAddLocation)
-                openCreateMarker(latLng = it)
+                openCreateMarker(latLng = it) //hands latlng of click to openCreateMarker
             }
         }
 
@@ -435,11 +435,10 @@ class MapsFragment : Fragment() {
     //Open CreateMarker-Activity (called when clicked on map)
     private fun openCreateMarker(latLng: LatLng) {
 
+        //create intent with latlng of the click as extra
         val intent = Intent(this.context, CreateMarker::class.java)
-
         val lat = latLng.latitude.toString()
         val lng = latLng.longitude.toString()
-
         intent.putExtra("latitude", lat)
         intent.putExtra("longitude", lng)
         startActivity(intent)
@@ -469,7 +468,7 @@ class MapsFragment : Fragment() {
     }
 
     //Animations for the InfoWindow
-    fun slideDown(view: View) {
+    private fun slideDown(view: View) {
         view.animate()
             .translationY(view.height.toFloat())
             .alpha(0f)
@@ -482,7 +481,7 @@ class MapsFragment : Fragment() {
             })
     }
 
-    fun slideUp(view: View) {
+    private fun slideUp(view: View) {
         view.visibility = View.VISIBLE
         view.alpha = 0f
         if (view.height > 0) {

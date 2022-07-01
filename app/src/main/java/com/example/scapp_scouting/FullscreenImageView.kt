@@ -19,7 +19,7 @@ class FullscreenImageView : AppCompatActivity() {
     }
 
     //Fill data to view
-    private fun fillViews(){
+    private fun fillViews() {
         FirebaseStorage.getInstance().reference.child(imgToken).downloadUrl.addOnSuccessListener {
             val uri = it
             val options: RequestOptions = RequestOptions()

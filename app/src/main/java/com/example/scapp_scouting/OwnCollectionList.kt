@@ -11,7 +11,7 @@ class OwnCollectionList : AppCompatActivity() {
 
     //Variables for the database and displays
     private lateinit var auth: FirebaseAuth
-    lateinit var mOwnRecyclerView: RecyclerView
+    private lateinit var mOwnRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,12 +19,14 @@ class OwnCollectionList : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         try {
             val tempUId = auth.currentUser?.uid.toString()
-            mOwnRecyclerView = this.findViewById<View>(R.id.ownLocationsRecyclerView) as RecyclerView
+            mOwnRecyclerView =
+                this.findViewById<View>(R.id.ownLocationsRecyclerView) as RecyclerView
 
             mOwnRecyclerView.apply {
                 this.layoutManager = LinearLayoutManager(this.context)
                 this.adapter = OwnCollectionAdapter(this.context, tempUId)
             }
-        } catch (e:Exception){}
+        } catch (e: Exception) {
+        }
     }
 }

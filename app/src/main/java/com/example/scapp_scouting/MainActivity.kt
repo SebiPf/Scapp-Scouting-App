@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         lateinit var globalCurrentMapLocation: LatLng
         var globalCurrentPosts: MutableList<String> = mutableListOf()
-        var globalCurrentSearchPosts : MutableList<String> = mutableListOf()
+        var globalCurrentSearchPosts: MutableList<String> = mutableListOf()
         var globalOwnPosts: MutableList<String> = mutableListOf()
     }
 
@@ -40,13 +40,13 @@ class MainActivity : AppCompatActivity() {
 
         bottomNavigation.setOnItemSelectedListener {
             //statusCollectionOpened prevents a new call and with it an error
-            if(!statusCollectionOpened){
+            if (!statusCollectionOpened) {
                 when (it.itemId) {
                     R.id.maps -> showHideFragment(mapsFragment)
                     R.id.collection -> showHideFragment(collectionFragment)
                     R.id.profile_username -> showHideFragment(profileFragment)
                 }
-            } else{
+            } else {
                 when (it.itemId) {
                     R.id.maps -> showHideFragment(mapsFragment)
                     R.id.profile_username -> showHideFragment(profileFragment)
@@ -63,7 +63,8 @@ class MainActivity : AppCompatActivity() {
             val transaction = supportFragmentManager.beginTransaction()
             transaction.add(R.id.fragment_container, fragment)
             transaction.commit()
-        } catch (e: Exception) {}
+        } catch (e: Exception) {
+        }
     }
 
     private fun showHideFragment(fragment: Fragment) {
@@ -90,6 +91,6 @@ class MainActivity : AppCompatActivity() {
             ft.remove(collectionFragment)
             ft.show(profileFragment)
         }
-            ft.commit()
+        ft.commit()
     }
 }

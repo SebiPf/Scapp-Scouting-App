@@ -99,7 +99,7 @@ class OwnDetailView : AppCompatActivity() {
 
                         //Assigning images to individual ImageViews based on the URI
                         FirebaseStorage.getInstance().reference.child(item).downloadUrl.addOnSuccessListener {
-                            var uri = it
+                            val uri = it
                             val options: RequestOptions = RequestOptions()
                                 .centerCrop()
                                 .placeholder(R.drawable.placeholder_01)
@@ -147,10 +147,10 @@ class OwnDetailView : AppCompatActivity() {
                 try {
                     //Load image into HeaderImageView
                     val temp = result.data?.get("Img") as ArrayList<*>
-                    var tempSnippet = temp[0] as String
-                    var imgToken = tempSnippet.substring(32, 86)
+                    val tempSnippet = temp[0] as String
+                    val imgToken = tempSnippet.substring(32, 86)
                     FirebaseStorage.getInstance().reference.child(imgToken).downloadUrl.addOnSuccessListener {
-                        var uri = it
+                        val uri = it
                         val options: RequestOptions = RequestOptions()
                             .centerCrop()
                             .placeholder(R.drawable.placeholder_01)

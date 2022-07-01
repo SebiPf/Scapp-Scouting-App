@@ -14,7 +14,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -29,6 +28,7 @@ class CollectionAdapter(context: android.content.Context) :
         var itemTitle: TextView
         var itemImage: ImageView
         var itemDescription: TextView
+
         init {
             itemTitle = itemView.findViewById(R.id.card_heading)
             itemImage = itemView.findViewById(R.id.card_image)

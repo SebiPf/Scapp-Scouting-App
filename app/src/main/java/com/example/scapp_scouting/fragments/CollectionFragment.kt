@@ -11,14 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.scapp_scouting.CollectionAdapter
 import com.example.scapp_scouting.MainActivity
 import com.example.scapp_scouting.R
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import java.util.*
 
 class CollectionFragment : Fragment() {
 
-    lateinit var mRecyclerView: RecyclerView
+    private lateinit var mRecyclerView: RecyclerView
 
     //Variables for the database
     private val db = Firebase.firestore
@@ -44,7 +43,8 @@ class CollectionFragment : Fragment() {
                 this.layoutManager = LinearLayoutManager(requireContext())
                 this.adapter = CollectionAdapter(this.context)
             }
-        }catch (e:Exception){}
+        } catch (e: Exception) {
+        }
     }
 
     //Search functions
@@ -56,6 +56,7 @@ class CollectionFragment : Fragment() {
                 search.isIconified = true
                 return true
             }
+
             override fun onQueryTextChange(newText: String): Boolean {
                 return true
             }
@@ -63,22 +64,32 @@ class CollectionFragment : Fragment() {
     }
 
     //Get all Locations matching to search query
-    private fun selectSearchedLocations(query: String){
+    private fun selectSearchedLocations(query: String) {
         if (query.uppercase(Locale.getDefault()) == "ALLE" || query.uppercase(Locale.getDefault()) == "ALL") {
-            RecyclerViewReload()
+            recyclerViewReload()
         } else {
             MainActivity.globalCurrentSearchPosts.clear()
-            for(item in MainActivity.globalCurrentPosts) {
+            for (item in MainActivity.globalCurrentPosts) {
                 db.collection("Posts")
                     .get()
                     .addOnSuccessListener { result ->
                         for (document in result) {
                             try {
-                                val searchFitsTitle = query.uppercase(Locale.getDefault()) in (document.data["Title"] as String).uppercase(Locale.getDefault())
-                                val searchFitsDescription = query.uppercase(Locale.getDefault()) in (document.data["Description"] as String).uppercase(Locale.getDefault())
+                                val searchFitsTitle =
+                                    query.uppercase(Locale.getDefault()) in (document.data["Title"] as String).uppercase(
+                                        Locale.getDefault()
+                                    )
+                                val searchFitsDescription =
+                                    query.uppercase(Locale.getDefault()) in (document.data["Description"] as String).uppercase(
+                                        Locale.getDefault()
+                                    )
                                 var searchFits = false
-                                if(searchFitsTitle) { searchFits = true }
-                                if(searchFitsDescription) { searchFits = true }
+                                if (searchFitsTitle) {
+                                    searchFits = true
+                                }
+                                if (searchFitsDescription) {
+                                    searchFits = true
+                                }
 
                                 if (document.id == item && searchFits) {
                                     MainActivity.globalCurrentSearchPosts.add(document.id)
@@ -94,7 +105,7 @@ class CollectionFragment : Fragment() {
 
     //Refresh (Reload) RecyclerView
     //Called when data has changed (new search query, ...)
-    private fun RecyclerViewReload(){
+    private fun recyclerViewReload() {
         MainActivity.globalCurrentSearchPosts.clear()
         MainActivity.globalCurrentSearchPosts = MainActivity.globalCurrentPosts
         mRecyclerView.adapter?.notifyDataSetChanged()

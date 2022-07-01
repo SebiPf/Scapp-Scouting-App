@@ -11,7 +11,6 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.imageview.ShapeableImageView
-import com.google.android.material.shape.CornerFamily
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -48,7 +47,7 @@ class ListDetailView : AppCompatActivity() {
                     //Drag image references from Firebase and save them in a list
                     val tempImageList = result.data?.get("Img") as ArrayList<*>
                     for (i in tempImageList.size downTo 1) {
-                        imgTokenList.add(tempImageList[i - 1].toString()!!.substring(32, 86))
+                        imgTokenList.add(tempImageList[i - 1].toString().substring(32, 86))
                     }
 
                     val horizontalScrollView = HorizontalScrollView(this)
@@ -98,7 +97,7 @@ class ListDetailView : AppCompatActivity() {
 
                         //Assigning images to individual ImageViews based on the URI
                         FirebaseStorage.getInstance().reference.child(item).downloadUrl.addOnSuccessListener {
-                            var uri = it
+                            val uri = it
                             val options: RequestOptions = RequestOptions()
                                 .centerCrop()
                                 .placeholder(R.drawable.placeholder_01)
@@ -116,7 +115,8 @@ class ListDetailView : AppCompatActivity() {
                                             putExtra("imgToken", item)
                                         }
                                     ContextCompat.startActivity(this, intent, null)
-                                } catch (e: Exception){}
+                                } catch (e: Exception) {
+                                }
                             }
                         }
                     }
@@ -143,10 +143,10 @@ class ListDetailView : AppCompatActivity() {
                 try {
                     //Load image into HeaderImageView
                     val temp = result.data?.get("Img") as ArrayList<*>
-                    var tempSnippet = temp[0] as String
-                    var imgToken = tempSnippet!!.substring(32, 86)
+                    val tempSnippet = temp[0] as String
+                    val imgToken = tempSnippet.substring(32, 86)
                     FirebaseStorage.getInstance().reference.child(imgToken).downloadUrl.addOnSuccessListener {
-                        var uri = it
+                        val uri = it
                         val options: RequestOptions = RequestOptions()
                             .centerCrop()
                             .placeholder(R.drawable.placeholder_01)
@@ -158,16 +158,20 @@ class ListDetailView : AppCompatActivity() {
                     }
 
                     //Load title in detailTitle
-                    (findViewById<View>(R.id.detailTitle) as TextView).text = result.data?.get("Title") as String
+                    (findViewById<View>(R.id.detailTitle) as TextView).text =
+                        result.data?.get("Title") as String
 
                     //Load text in detailDescription
-                    (findViewById<View>(R.id.detailDescription) as TextView).text = result.data?.get("Description") as String
+                    (findViewById<View>(R.id.detailDescription) as TextView).text =
+                        result.data?.get("Description") as String
 
                     //Load text in detailUserID
-                    if(result.data?.get("UserId") != auth.currentUser?.uid){
-                        (findViewById<View>(R.id.detailUserID) as TextView).text = "User-ID des Erstellers: " + (result.data?.get("UserId") as String)
-                    }else{
-                        (findViewById<View>(R.id.detailUserID) as TextView).text = "Dieser Post wurde von dir erstellt."
+                    if (result.data?.get("UserId") != auth.currentUser?.uid) {
+                        (findViewById<View>(R.id.detailUserID) as TextView).text =
+                            "User-ID des Erstellers: " + (result.data?.get("UserId") as String)
+                    } else {
+                        (findViewById<View>(R.id.detailUserID) as TextView).text =
+                            "Dieser Post wurde von dir erstellt."
                     }
 
                 } catch (e: Exception) {

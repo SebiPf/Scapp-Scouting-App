@@ -15,7 +15,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 
-class OwnCollectionAdapter(context: android.content.Context, uID: String):
+class OwnCollectionAdapter(context: android.content.Context, uID: String) :
     RecyclerView.Adapter<OwnCollectionAdapter.ViewHolder>() {
 
     //Variables for the database and displays
@@ -27,6 +27,7 @@ class OwnCollectionAdapter(context: android.content.Context, uID: String):
         var itemTitle: TextView
         var itemImage: ImageView
         var itemDescription: TextView
+
         init {
             itemTitle = itemView.findViewById(R.id.card_heading)
             itemImage = itemView.findViewById(R.id.card_image)
@@ -77,7 +78,8 @@ class OwnCollectionAdapter(context: android.content.Context, uID: String):
                                             putExtra("postID", document.id)
                                         }
                                     ContextCompat.startActivity(mContext, intent, null)
-                                } catch (e: Exception){}
+                                } catch (e: Exception) {
+                                }
                             }
                         }
                     } catch (e: Exception) {
