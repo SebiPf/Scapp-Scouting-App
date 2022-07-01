@@ -42,6 +42,7 @@
                 android:id="@+id/popup_window_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
                 android:gravity="center"
                 android:hint="Title"
                 android:textAlignment="center"
@@ -59,12 +60,10 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
                 android:gravity="center"
                 android:hint="Description"
-                android:textAlignment="center"
+                android:textAlignment="viewStart"
                 android:textSize="25sp"
-                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/popup_window_title" />
@@ -95,13 +94,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
-                android:background="#9E1C40"
+                android:background="@drawable/bg_gray_rounded"
                 android:gravity="center"
                 android:text="Upload Image"
+                app:layout_constraintBottom_toTopOf="@+id/popup_window_button"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.504"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imgviewcontainer"
                 tools:srcCompat="@tools:sample/avatars" />
 
             <Button
@@ -111,15 +109,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
-                android:layout_marginBottom="0dp"
-                android:background="#851635"
+                android:background="@drawable/bg_gray_rounded"
                 android:text="Create Marker"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ImgButton" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.839" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
